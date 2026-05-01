@@ -6,6 +6,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\Auth\LogoutController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\SubcategoryController;
+use App\Http\Controllers\Admin\MedicineController;
 
 // ================== GUEST ==================
 Route::middleware('guest:admin')->group(function () {
@@ -29,6 +30,8 @@ Route::middleware('auth:admin')->group(function () {
     // SubCategorie
     Route::resource('subcategories',SubcategoryController::class);
 
+    // Medicine Route
+Route::resource('medicines', MedicineController::class);
 
 
 });

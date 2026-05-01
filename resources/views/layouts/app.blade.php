@@ -157,62 +157,85 @@
         <!-- Navigation -->
         <nav class="flex-1 px-3 py-5 overflow-y-auto" style="scrollbar-width:none;">
 
-            <p class="text-xs font-bold uppercase tracking-widest mb-3 px-3"
-                style="color:rgba(255,255,255,0.35); letter-spacing:.1em;">Main Menu</p>
+    <p class="text-xs font-bold uppercase tracking-widest mb-3 px-3"
+        style="color:rgba(255,255,255,0.35); letter-spacing:.1em;">Main Menu</p>
 
-            <a onclick="showPage('dashboard')"
-                class="sidebar-link active flex items-center gap-3 px-4 py-2.5 rounded-xl cursor-pointer text-sm font-medium mb-1 transition-all duration-150"
-                style="color:#fff; text-decoration:none;">
-                <i class="bi bi-speedometer2 w-4 text-center" style="color:#5DCAA5;"></i> Dashboard
-            </a>
+    {{-- Dashboard --}}
+    <a href="{{ route('admin.dashboard') }}"
+        class="sidebar-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }} flex items-center gap-3 px-4 py-2.5 rounded-xl cursor-pointer text-sm font-medium mb-1 transition-all duration-150"
+        style="color:{{ request()->routeIs('admin.dashboard') ? '#fff' : 'rgba(255,255,255,0.65)' }}; text-decoration:none;">
+        <i class="bi bi-speedometer2 w-4 text-center" style="color:#5DCAA5;"></i> Dashboard
+    </a>
 
-            <a onclick="showPage('add-medicine')"
-                class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-xl cursor-pointer text-sm font-medium mb-1 transition-all duration-150"
-                style="color:rgba(255,255,255,0.65); text-decoration:none;">
-                <i class="bi bi-plus-circle w-4 text-center" style="color:#5DCAA5;"></i> Add Medicine
-            </a>
+    {{-- Add Medicine --}}
+    <a href="{{ route('admin.medicines.create') }}"
+        class="sidebar-link {{ request()->routeIs('admin.medicines.create') ? 'active' : '' }} flex items-center gap-3 px-4 py-2.5 rounded-xl cursor-pointer text-sm font-medium mb-1 transition-all duration-150"
+        style="color:{{ request()->routeIs('admin.medicines.create') ? '#fff' : 'rgba(255,255,255,0.65)' }}; text-decoration:none;">
+        <i class="bi bi-plus-circle w-4 text-center" style="color:#5DCAA5;"></i> Add Medicine
+    </a>
 
-            <a onclick="showPage('manage')"
-                class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-xl cursor-pointer text-sm font-medium mb-1 transition-all duration-150"
-                style="color:rgba(255,255,255,0.65); text-decoration:none;">
-                <i class="bi bi-archive w-4 text-center" style="color:#5DCAA5;"></i> Manage Medicines
-            </a>
+    {{-- Manage Medicines --}}
+    <a href="{{ route('admin.medicines.index') }}"
+        class="sidebar-link {{ request()->routeIs('admin.medicines.index') ? 'active' : '' }} flex items-center gap-3 px-4 py-2.5 rounded-xl cursor-pointer text-sm font-medium mb-1 transition-all duration-150"
+        style="color:{{ request()->routeIs('admin.medicines.index') ? '#fff' : 'rgba(255,255,255,0.65)' }}; text-decoration:none;">
+        <i class="bi bi-archive w-4 text-center" style="color:#5DCAA5;"></i> Manage Medicines
+    </a>
 
-            <a onclick="showPage('billing')"
-                class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-xl cursor-pointer text-sm font-medium mb-1 transition-all duration-150"
-                style="color:rgba(255,255,255,0.65); text-decoration:none;">
-                <i class="bi bi-receipt w-4 text-center" style="color:#5DCAA5;"></i> Billing System
-            </a>
+    {{-- Categories --}}
+    <a href="{{ route('admin.categories.index') }}"
+        class="sidebar-link {{ request()->routeIs('admin.categories.*') ? 'active' : '' }} flex items-center gap-3 px-4 py-2.5 rounded-xl cursor-pointer text-sm font-medium mb-1 transition-all duration-150"
+        style="color:{{ request()->routeIs('admin.categories.*') ? '#fff' : 'rgba(255,255,255,0.65)' }}; text-decoration:none;">
+        <i class="bi bi-grid w-4 text-center" style="color:#5DCAA5;"></i> Categories
+    </a>
 
-            <a onclick="showPage('reports')"
-                class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-xl cursor-pointer text-sm font-medium mb-1 transition-all duration-150"
-                style="color:rgba(255,255,255,0.65); text-decoration:none;">
-                <i class="bi bi-bar-chart-line w-4 text-center" style="color:#5DCAA5;"></i> Reports
-            </a>
+    {{-- Subcategories --}}
+    <a href="{{ route('admin.subcategories.index') }}"
+        class="sidebar-link {{ request()->routeIs('admin.subcategories.*') ? 'active' : '' }} flex items-center gap-3 px-4 py-2.5 rounded-xl cursor-pointer text-sm font-medium mb-1 transition-all duration-150"
+        style="color:{{ request()->routeIs('admin.subcategories.*') ? '#fff' : 'rgba(255,255,255,0.65)' }}; text-decoration:none;">
+        <i class="bi bi-diagram-3 w-4 text-center" style="color:#5DCAA5;"></i> Subcategories
+    </a>
 
-            <hr class="my-4 border-white/10" />
+    {{-- Billing System --}}
+    {{-- <a href="{{ route('admin.billing.index') }}"
+        class="sidebar-link {{ request()->routeIs('admin.billing.*') ? 'active' : '' }} flex items-center gap-3 px-4 py-2.5 rounded-xl cursor-pointer text-sm font-medium mb-1 transition-all duration-150"
+        style="color:{{ request()->routeIs('admin.billing.*') ? '#fff' : 'rgba(255,255,255,0.65)' }}; text-decoration:none;">
+        <i class="bi bi-receipt w-4 text-center" style="color:#5DCAA5;"></i> Billing System
+    </a> --}}
 
-            <p class="text-xs font-bold uppercase tracking-widest mb-3 px-3"
-                style="color:rgba(255,255,255,0.35); letter-spacing:.1em;">Account</p>
+    {{-- Reports --}}
+    {{-- <a href="{{ route('admin.reports.index') }}"
+        class="sidebar-link {{ request()->routeIs('admin.reports.*') ? 'active' : '' }} flex items-center gap-3 px-4 py-2.5 rounded-xl cursor-pointer text-sm font-medium mb-1 transition-all duration-150"
+        style="color:{{ request()->routeIs('admin.reports.*') ? '#fff' : 'rgba(255,255,255,0.65)' }}; text-decoration:none;">
+        <i class="bi bi-bar-chart-line w-4 text-center" style="color:#5DCAA5;"></i> Reports
+    </a> --}}
 
-            <a class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-xl cursor-pointer text-sm font-medium mb-1 transition-all duration-150"
-                style="color:rgba(255,255,255,0.65); text-decoration:none;">
-                <i class="bi bi-gear w-4 text-center" style="color:#5DCAA5;"></i> Settings
-            </a>
+    <hr class="my-4 border-white/10" />
 
-            <a class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-xl cursor-pointer text-sm font-medium mb-1 transition-all duration-150"
-                style="color:rgba(255,255,255,0.65); text-decoration:none;">
-                <i class="bi bi-question-circle w-4 text-center" style="color:#5DCAA5;"></i> Help &amp; Support
-            </a>
+    <p class="text-xs font-bold uppercase tracking-widest mb-3 px-3"
+        style="color:rgba(255,255,255,0.35); letter-spacing:.1em;">Account</p>
 
-            {{-- ✅ LOGOUT BUTTON - calls confirmLogout() --}}
-            <a onclick="confirmLogout()"
-                class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-xl cursor-pointer text-sm font-medium mt-1 transition-all duration-150"
-                style="color:rgba(252,135,135,0.85); text-decoration:none;">
-                <i class="bi bi-box-arrow-right w-4 text-center"></i> Logout
-            </a>
+    {{-- Settings --}}
+    {{-- <a href="{{ route('admin.settings.index') }}"
+        class="sidebar-link {{ request()->routeIs('admin.settings.*') ? 'active' : '' }} flex items-center gap-3 px-4 py-2.5 rounded-xl cursor-pointer text-sm font-medium mb-1 transition-all duration-150"
+        style="color:{{ request()->routeIs('admin.settings.*') ? '#fff' : 'rgba(255,255,255,0.65)' }}; text-decoration:none;">
+        <i class="bi bi-gear w-4 text-center" style="color:#5DCAA5;"></i> Settings
+    </a> --}}
 
-        </nav>
+    {{-- Help & Support --}}
+    {{-- <a href="{{ route('admin.help.index') }}"
+        class="sidebar-link {{ request()->routeIs('admin.help.*') ? 'active' : '' }} flex items-center gap-3 px-4 py-2.5 rounded-xl cursor-pointer text-sm font-medium mb-1 transition-all duration-150"
+        style="color:{{ request()->routeIs('admin.help.*') ? '#fff' : 'rgba(255,255,255,0.65)' }}; text-decoration:none;">
+        <i class="bi bi-question-circle w-4 text-center" style="color:#5DCAA5;"></i> Help &amp; Support
+    </a> --}}
+
+    {{-- Logout --}}
+    <a onclick="confirmLogout()"
+        class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-xl cursor-pointer text-sm font-medium mt-1 transition-all duration-150"
+        style="color:rgba(252,135,135,0.85); text-decoration:none;">
+        <i class="bi bi-box-arrow-right w-4 text-center"></i> Logout
+    </a>
+
+</nav> 
 
         <!-- User chip -->
         <div class="px-3 py-4 border-t border-white/10 flex-shrink-0">

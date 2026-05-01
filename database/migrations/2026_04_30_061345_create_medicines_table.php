@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('medicines', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('company'); // brand --- Brand forein key  
-            $table->integer('stock');
-            $table->date('expiry_data');
+            $table->string('company')->nullable(); // brand --- Brand forein key  
+            $table->integer('stock')->default(0);
+            $table->date('expiry_data')->nullable();
              $table->foreignId('category_id')
                   ->nullable()
                   ->constrained()
