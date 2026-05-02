@@ -9,6 +9,8 @@ class Medicine extends Model
     protected $fillable = [ 'name',
         'company',
         'stock',
+        'price',
+        'description',
         'expiry_date',
         'category_id',
         'subcategory_id'];

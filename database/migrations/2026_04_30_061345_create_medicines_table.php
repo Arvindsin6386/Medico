@@ -16,16 +16,19 @@ return new class extends Migration
             $table->string('name');
             $table->string('company')->nullable(); // brand --- Brand forein key  
             $table->integer('stock')->default(0);
+            $table->integer('price')->default(0);
+            $table->string('description')->nullable();
+
             $table->date('expiry_data')->nullable();
-             $table->foreignId('category_id')
-                  ->nullable()
-                  ->constrained()
-                  ->onDelete('set null');
+            $table->foreignId('category_id')
+                ->nullable()
+                ->constrained()
+                ->onDelete('set null');
 
             $table->foreignId('subcategory_id')
-                  ->nullable()
-                  ->constrained()
-                  ->onDelete('set null');
+                ->nullable()
+                ->constrained()
+                ->onDelete('set null');
             $table->timestamps();
         });
     }

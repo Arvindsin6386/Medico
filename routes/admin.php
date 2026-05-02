@@ -30,8 +30,15 @@ Route::middleware('auth:admin')->group(function () {
     // SubCategorie
     Route::resource('subcategories',SubcategoryController::class);
 
-    // Medicine Route
-Route::resource('medicines', MedicineController::class);
+    // Medicines (IMPORTANT)
+    Route::resource('medicines', MedicineController::class);
+
+    // OPTIONAL (if you really want custom add page)
+    Route::get('/medicines/add', [MedicineController::class, 'create'])
+        ->name('medicines.step.category');
+
+
+
 
 
 });

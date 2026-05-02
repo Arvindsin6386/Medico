@@ -17,39 +17,42 @@
             <div class="card-body">
                 <form action="{{ route('admin.medicines.store') }}" method="POST">
                     @csrf
+                    <div class="row">
 
-                    {{-- Step 1: Select Category --}}
-                    <div class="mb-3">
-                        <label>Category <span class="text-danger">*</span></label>
-                        <select name="category_id" id="category_id" class="form-control" required>
-                            <option value="">-- Select Category --</option>
-                            @foreach ($categories as $category)
-                                <option value="{{ $category->id }}"
-                                    {{ old('category_id') == $category->id ? 'selected' : '' }}>
-                                    {{ $category->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                        @error('category_id')
-                            <span class="text-danger">{{ $message }}</span>
-                        @enderror
-                    </div>
+                        {{-- Category --}}
+                        <div class="col-md-6 mb-3">
+                            <label>Category <span class="text-danger">*</span></label>
+                            <select name="category_id" id="category_id" class="form-control" required>
+                                <option value="">-- Select Category --</option>
+                                @foreach ($categories as $category)
+                                    <option value="{{ $category->id }}"
+                                        {{ old('category_id') == $category->id ? 'selected' : '' }}>
+                                        {{ $category->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('category_id')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
 
-                    {{-- Step 2: Select Subcategory (filtered by category) --}}
-                    <div class="mb-3">
-                        <label>Subcategory <span class="text-danger">*</span></label>
-                        <select name="subcategory_id" id="subcategory_id" class="form-control" required>
-                            <option value="">-- Select Subcategory --</option>
-                            @foreach ($subcategories as $subcategory)
-                                <option value="{{ $subcategory->id }}" data-category="{{ $subcategory->category_id }}"
-                                    {{ old('subcategory_id') == $subcategory->id ? 'selected' : '' }}>
-                                    {{ $subcategory->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                        @error('subcategory_id')
-                            <span class="text-danger">{{ $message }}</span>
-                        @enderror
+                        {{-- Subcategory --}}
+                        <div class="col-md-6 mb-3">
+                            <label>Subcategory <span class="text-danger">*</span></label>
+                            <select name="subcategory_id" id="subcategory_id" class="form-control" required>
+                                <option value="">-- Select Subcategory --</option>
+                                @foreach ($subcategories as $subcategory)
+                                    <option value="{{ $subcategory->id }}" data-category="{{ $subcategory->category_id }}"
+                                        {{ old('subcategory_id') == $subcategory->id ? 'selected' : '' }}>
+                                        {{ $subcategory->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('subcategory_id')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+
                     </div>
 
                     {{-- Step 3: Medicine Name --}}
@@ -68,6 +71,29 @@
                         @error('stock')
                             <span class="text-danger" style="font-size:12px;">{{ $message }}</span>
                         @enderror
+                    </div>
+                    <div class="row">
+
+                        {{-- Price --}}
+                        <div class="col-md-6 mb-3">
+                            <label>Price <span class="text-danger">*</span></label>
+                            <input type="number" name="price" class="form-control" placeholder="Enter price"
+                                value="{{ old('price') }}" required>
+                            @error('price')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+ 
+                        {{-- Description --}}
+                        <div class="col-md-6 mb-3">
+                            <label>Description</label>
+                            <input type="text" name="description" class="form-control" placeholder="Enter description"
+                                value="{{ old('description') }}">
+                            @error('description')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+
                     </div>
 
                     <button type="submit" class="btn btn-primary">Add Medicine</button>
