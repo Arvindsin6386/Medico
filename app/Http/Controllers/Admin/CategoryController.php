@@ -39,7 +39,7 @@ class CategoryController extends Controller
             'image' => $miagepath,
 
         ]);
-        return redirect()->back()->with('success', 'Category Add Successfully');
+        return redirect()->route('admin.categories.index')->with('success', 'Category Add Successfully');
     }
 
     public function update(Request $request, Category $category)
@@ -66,7 +66,7 @@ class CategoryController extends Controller
             'image'       => $imagePath,
 
         ]);
-        return redirect()->back()
+        return redirect()->route('admin.categories.index')
             ->with('success', 'Category updated successfully!');
     }
 
@@ -74,7 +74,7 @@ class CategoryController extends Controller
     {
         $category->delete();
 
-        return redirect()->back()
+        return redirect()->route('admin.categories.index')
             ->with('success', 'Category deleted successfully!');
     }
 }

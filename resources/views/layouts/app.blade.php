@@ -196,18 +196,18 @@
     </a>
 
     {{-- Billing System --}}
-    {{-- <a href="{{ route('admin.billing.index') }}"
+    <a href="{{ route('admin.billing.index') }}"
         class="sidebar-link {{ request()->routeIs('admin.billing.*') ? 'active' : '' }} flex items-center gap-3 px-4 py-2.5 rounded-xl cursor-pointer text-sm font-medium mb-1 transition-all duration-150"
         style="color:{{ request()->routeIs('admin.billing.*') ? '#fff' : 'rgba(255,255,255,0.65)' }}; text-decoration:none;">
         <i class="bi bi-receipt w-4 text-center" style="color:#5DCAA5;"></i> Billing System
-    </a> --}}
+    </a>
 
-    {{-- Reports --}}
-    {{-- <a href="{{ route('admin.reports.index') }}"
+    {{-- Reports --}} --
+     <a href="{{ route('admin.reports.index') }}"
         class="sidebar-link {{ request()->routeIs('admin.reports.*') ? 'active' : '' }} flex items-center gap-3 px-4 py-2.5 rounded-xl cursor-pointer text-sm font-medium mb-1 transition-all duration-150"
         style="color:{{ request()->routeIs('admin.reports.*') ? '#fff' : 'rgba(255,255,255,0.65)' }}; text-decoration:none;">
         <i class="bi bi-bar-chart-line w-4 text-center" style="color:#5DCAA5;"></i> Reports
-    </a> --}}
+    </a> 
 
     <hr class="my-4 border-white/10" />
 

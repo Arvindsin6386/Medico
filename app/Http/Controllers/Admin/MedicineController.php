@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Storage;
 
 class MedicineController extends Controller
 {
-    // Opens Add Medicine form
+    // Opens Add Medicine form 
     // Called when "Add Medicine" clicked in sidebar
     public function create()
     {
@@ -21,7 +21,7 @@ class MedicineController extends Controller
     }
 
     // Shows all medicines
-    // Called when "Manage Medicines" clicked in sidebar
+    // Called when "Manage Medicines" clicked in sidebar 
     public function index()
     {
         $medicines     = Medicine::with('category', 'subcategory')->latest()->get();
