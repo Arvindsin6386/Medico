@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Category;
 use App\Models\Subcategory;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 
 class SubcategoryController extends Controller
 {
@@ -22,7 +23,7 @@ class SubcategoryController extends Controller
     {
         $request->validate([
             'category_id' => 'required|exists:categories,id',
-            'name' => 'required|string|max:255|unique:categories,name',
+            'name' => 'required|string|max:255|unique:subcategories,name',
             'description' => 'nullable|string|max:500',
             'status'      => 'required|in:active,inactive',
             'image'       => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
@@ -46,35 +47,80 @@ class SubcategoryController extends Controller
 
     public function update(Request $request, Subcategory $subcategory)
     {
+
+
         $request->validate([
+
             'category_id' => 'required|exists:categories,id',
-            'name'        => 'required|string|max:255|unique:subcategories,name,',
+
+            'name' => [
+                'required',
+                'max:255',
+                Rule::unique('subcategories', 'name')
+                    ->ignore($subcategory->id),
+            ],
+
             'description' => 'nullable|string|max:500',
-            'status'      => 'required|in:active,inactive',
-            'image'       => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+
+            'status' => 'required|in:active,inactive',
+
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
 
         ]);
 
+
+        // Old image
         $imagePath = $subcategory->image;
+
+
+        // Upload new image
         if ($request->hasFile('image')) {
-            if ($subcategory->image && Storage::disk('public')->exists($subcategory->image)) {
-                Storage::disk('public')->delete($subcategory->image);
+
+            // Delete old image
+            if (
+                $subcategory->image &&
+                Storage::disk('public')->exists($subcategory->image)
+            ) {
+
+                Storage::disk('public')
+                    ->delete($subcategory->image);
             }
-            $imagepath = $request->file('image')->store('subcategories', 'public');
+
+            // Store new image
+            $imagePath = $request->file('image')
+                ->store('subcategories', 'public');
         }
 
-        Subcategory::updated([
+
+        // Update data
+        $updated = $subcategory->update([
+
             'category_id' => $request->category_id,
-            'name'        => $request->name,
+
+            'name' => $request->name,
+
             'description' => $request->description,
-            'status'      => $request->status,
-            'image'       => $imagePath,
+
+            'status' => $request->status,
+
+            'image' => $imagePath,
 
         ]);
-        return redirect()->back()->with('success', 'Subcategory updated successfully!');
+
+
+        
+        if ($updated) {
+
+            return redirect()->back()
+                ->with('success', 'Subcategory updated successfully!');
+        } else {
+
+            return redirect()->back()
+                ->with('error', 'Subcategory not updated!');
+        }
     }
 
-       public function destroy(Subcategory $subcategory)
+    public function destroy(Subcategory $subcategory)
     {
         // delete image from storage on soft delete
         if ($subcategory->image && Storage::disk('public')->exists($subcategory->image)) {
@@ -86,4 +132,3 @@ class SubcategoryController extends Controller
         return redirect()->back()->with('success', 'Subcategory deleted successfully!');
     }
 }
-

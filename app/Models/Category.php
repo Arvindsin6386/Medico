@@ -14,6 +14,9 @@ class Category extends Model
         'deleted_at',
 
     ];
+    protected $casts = [
+    'images' => 'array',
+];
 
     // one catergory has many subcategory
     public function subcategories()

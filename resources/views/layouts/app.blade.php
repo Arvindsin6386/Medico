@@ -17,6 +17,10 @@
         href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Sora:wght@600;700&display=swap"
         rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
 
     <script>
         tailwind.config = {
@@ -157,85 +161,85 @@
         <!-- Navigation -->
         <nav class="flex-1 px-3 py-5 overflow-y-auto" style="scrollbar-width:none;">
 
-    <p class="text-xs font-bold uppercase tracking-widest mb-3 px-3"
-        style="color:rgba(255,255,255,0.35); letter-spacing:.1em;">Main Menu</p>
+            <p class="text-xs font-bold uppercase tracking-widest mb-3 px-3"
+                style="color:rgba(255,255,255,0.35); letter-spacing:.1em;">Main Menu</p>
 
-    {{-- Dashboard --}}
-    <a href="{{ route('admin.dashboard') }}"
-        class="sidebar-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }} flex items-center gap-3 px-4 py-2.5 rounded-xl cursor-pointer text-sm font-medium mb-1 transition-all duration-150"
-        style="color:{{ request()->routeIs('admin.dashboard') ? '#fff' : 'rgba(255,255,255,0.65)' }}; text-decoration:none;">
-        <i class="bi bi-speedometer2 w-4 text-center" style="color:#5DCAA5;"></i> Dashboard
-    </a>
+            {{-- Dashboard --}}
+            <a href="{{ route('admin.dashboard') }}"
+                class="sidebar-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }} flex items-center gap-3 px-4 py-2.5 rounded-xl cursor-pointer text-sm font-medium mb-1 transition-all duration-150"
+                style="color:{{ request()->routeIs('admin.dashboard') ? '#fff' : 'rgba(255,255,255,0.65)' }}; text-decoration:none;">
+                <i class="bi bi-speedometer2 w-4 text-center" style="color:#5DCAA5;"></i> Dashboard
+            </a>
 
-    {{-- Add Medicine --}}
-    <a href="{{ route('admin.medicines.create') }}"
-        class="sidebar-link {{ request()->routeIs('admin.medicines.create') ? 'active' : '' }} flex items-center gap-3 px-4 py-2.5 rounded-xl cursor-pointer text-sm font-medium mb-1 transition-all duration-150"
-        style="color:{{ request()->routeIs('admin.medicines.create') ? '#fff' : 'rgba(255,255,255,0.65)' }}; text-decoration:none;">
-        <i class="bi bi-plus-circle w-4 text-center" style="color:#5DCAA5;"></i> Add Medicine
-    </a>
+            {{-- Add Medicine --}}
+            <a href="{{ route('admin.medicines.create') }}"
+                class="sidebar-link {{ request()->routeIs('admin.medicines.create') ? 'active' : '' }} flex items-center gap-3 px-4 py-2.5 rounded-xl cursor-pointer text-sm font-medium mb-1 transition-all duration-150"
+                style="color:{{ request()->routeIs('admin.medicines.create') ? '#fff' : 'rgba(255,255,255,0.65)' }}; text-decoration:none;">
+                <i class="bi bi-plus-circle w-4 text-center" style="color:#5DCAA5;"></i> Add Medicine
+            </a>
 
-    {{-- Manage Medicines --}}
-    <a href="{{ route('admin.medicines.index') }}"
-        class="sidebar-link {{ request()->routeIs('admin.medicines.index') ? 'active' : '' }} flex items-center gap-3 px-4 py-2.5 rounded-xl cursor-pointer text-sm font-medium mb-1 transition-all duration-150"
-        style="color:{{ request()->routeIs('admin.medicines.index') ? '#fff' : 'rgba(255,255,255,0.65)' }}; text-decoration:none;">
-        <i class="bi bi-archive w-4 text-center" style="color:#5DCAA5;"></i> Manage Medicines
-    </a>
+            {{-- Manage Medicines --}}
+            <a href="{{ route('admin.medicines.index') }}"
+                class="sidebar-link {{ request()->routeIs('admin.medicines.index') ? 'active' : '' }} flex items-center gap-3 px-4 py-2.5 rounded-xl cursor-pointer text-sm font-medium mb-1 transition-all duration-150"
+                style="color:{{ request()->routeIs('admin.medicines.index') ? '#fff' : 'rgba(255,255,255,0.65)' }}; text-decoration:none;">
+                <i class="bi bi-archive w-4 text-center" style="color:#5DCAA5;"></i> Manage Medicines
+            </a>
 
-    {{-- Categories --}}
-    <a href="{{ route('admin.categories.index') }}"
-        class="sidebar-link {{ request()->routeIs('admin.categories.*') ? 'active' : '' }} flex items-center gap-3 px-4 py-2.5 rounded-xl cursor-pointer text-sm font-medium mb-1 transition-all duration-150"
-        style="color:{{ request()->routeIs('admin.categories.*') ? '#fff' : 'rgba(255,255,255,0.65)' }}; text-decoration:none;">
-        <i class="bi bi-grid w-4 text-center" style="color:#5DCAA5;"></i> Categories
-    </a>
+            {{-- Categories --}}
+            <a href="{{ route('admin.categories.index') }}"
+                class="sidebar-link {{ request()->routeIs('admin.categories.*') ? 'active' : '' }} flex items-center gap-3 px-4 py-2.5 rounded-xl cursor-pointer text-sm font-medium mb-1 transition-all duration-150"
+                style="color:{{ request()->routeIs('admin.categories.*') ? '#fff' : 'rgba(255,255,255,0.65)' }}; text-decoration:none;">
+                <i class="bi bi-grid w-4 text-center" style="color:#5DCAA5;"></i> Categories
+            </a>
 
-    {{-- Subcategories --}}
-    <a href="{{ route('admin.subcategories.index') }}"
-        class="sidebar-link {{ request()->routeIs('admin.subcategories.*') ? 'active' : '' }} flex items-center gap-3 px-4 py-2.5 rounded-xl cursor-pointer text-sm font-medium mb-1 transition-all duration-150"
-        style="color:{{ request()->routeIs('admin.subcategories.*') ? '#fff' : 'rgba(255,255,255,0.65)' }}; text-decoration:none;">
-        <i class="bi bi-diagram-3 w-4 text-center" style="color:#5DCAA5;"></i> Subcategories
-    </a>
+            {{-- Subcategories --}}
+            <a href="{{ route('admin.subcategories.index') }}"
+                class="sidebar-link {{ request()->routeIs('admin.subcategories.*') ? 'active' : '' }} flex items-center gap-3 px-4 py-2.5 rounded-xl cursor-pointer text-sm font-medium mb-1 transition-all duration-150"
+                style="color:{{ request()->routeIs('admin.subcategories.*') ? '#fff' : 'rgba(255,255,255,0.65)' }}; text-decoration:none;">
+                <i class="bi bi-diagram-3 w-4 text-center" style="color:#5DCAA5;"></i> Subcategories
+            </a>
 
-    {{-- Billing System --}}
-    <a href="{{ route('admin.billing.index') }}"
-        class="sidebar-link {{ request()->routeIs('admin.billing.*') ? 'active' : '' }} flex items-center gap-3 px-4 py-2.5 rounded-xl cursor-pointer text-sm font-medium mb-1 transition-all duration-150"
-        style="color:{{ request()->routeIs('admin.billing.*') ? '#fff' : 'rgba(255,255,255,0.65)' }}; text-decoration:none;">
-        <i class="bi bi-receipt w-4 text-center" style="color:#5DCAA5;"></i> Billing System
-    </a>
+            {{-- Billing System --}}
+            <a href="{{ route('admin.billing.index') }}"
+                class="sidebar-link {{ request()->routeIs('admin.billing.*') ? 'active' : '' }} flex items-center gap-3 px-4 py-2.5 rounded-xl cursor-pointer text-sm font-medium mb-1 transition-all duration-150"
+                style="color:{{ request()->routeIs('admin.billing.*') ? '#fff' : 'rgba(255,255,255,0.65)' }}; text-decoration:none;">
+                <i class="bi bi-receipt w-4 text-center" style="color:#5DCAA5;"></i> Billing System
+            </a>
 
-    {{-- Reports --}} --
-     <a href="{{ route('admin.reports.index') }}"
-        class="sidebar-link {{ request()->routeIs('admin.reports.*') ? 'active' : '' }} flex items-center gap-3 px-4 py-2.5 rounded-xl cursor-pointer text-sm font-medium mb-1 transition-all duration-150"
-        style="color:{{ request()->routeIs('admin.reports.*') ? '#fff' : 'rgba(255,255,255,0.65)' }}; text-decoration:none;">
-        <i class="bi bi-bar-chart-line w-4 text-center" style="color:#5DCAA5;"></i> Reports
-    </a> 
+            {{-- Reports --}} --
+            <a href="{{ route('admin.reports.index') }}"
+                class="sidebar-link {{ request()->routeIs('admin.reports.*') ? 'active' : '' }} flex items-center gap-3 px-4 py-2.5 rounded-xl cursor-pointer text-sm font-medium mb-1 transition-all duration-150"
+                style="color:{{ request()->routeIs('admin.reports.*') ? '#fff' : 'rgba(255,255,255,0.65)' }}; text-decoration:none;">
+                <i class="bi bi-bar-chart-line w-4 text-center" style="color:#5DCAA5;"></i> Reports
+            </a>
 
-    <hr class="my-4 border-white/10" />
+            <hr class="my-4 border-white/10" />
 
-    <p class="text-xs font-bold uppercase tracking-widest mb-3 px-3"
-        style="color:rgba(255,255,255,0.35); letter-spacing:.1em;">Account</p>
+            <p class="text-xs font-bold uppercase tracking-widest mb-3 px-3"
+                style="color:rgba(255,255,255,0.35); letter-spacing:.1em;">Account</p>
 
-    {{-- Settings --}}
-    {{-- <a href="{{ route('admin.settings.index') }}"
+            {{-- Settings --}}
+            {{-- <a href="{{ route('admin.settings.index') }}"
         class="sidebar-link {{ request()->routeIs('admin.settings.*') ? 'active' : '' }} flex items-center gap-3 px-4 py-2.5 rounded-xl cursor-pointer text-sm font-medium mb-1 transition-all duration-150"
         style="color:{{ request()->routeIs('admin.settings.*') ? '#fff' : 'rgba(255,255,255,0.65)' }}; text-decoration:none;">
         <i class="bi bi-gear w-4 text-center" style="color:#5DCAA5;"></i> Settings
     </a> --}}
 
-    {{-- Help & Support --}}
-    {{-- <a href="{{ route('admin.help.index') }}"
+            {{-- Help & Support --}}
+            {{-- <a href="{{ route('admin.help.index') }}"
         class="sidebar-link {{ request()->routeIs('admin.help.*') ? 'active' : '' }} flex items-center gap-3 px-4 py-2.5 rounded-xl cursor-pointer text-sm font-medium mb-1 transition-all duration-150"
         style="color:{{ request()->routeIs('admin.help.*') ? '#fff' : 'rgba(255,255,255,0.65)' }}; text-decoration:none;">
         <i class="bi bi-question-circle w-4 text-center" style="color:#5DCAA5;"></i> Help &amp; Support
     </a> --}}
 
-    {{-- Logout --}}
-    <a onclick="confirmLogout()"
-        class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-xl cursor-pointer text-sm font-medium mt-1 transition-all duration-150"
-        style="color:rgba(252,135,135,0.85); text-decoration:none;">
-        <i class="bi bi-box-arrow-right w-4 text-center"></i> Logout
-    </a>
+            {{-- Logout --}}
+            <a onclick="confirmLogout()"
+                class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-xl cursor-pointer text-sm font-medium mt-1 transition-all duration-150"
+                style="color:rgba(252,135,135,0.85); text-decoration:none;">
+                <i class="bi bi-box-arrow-right w-4 text-center"></i> Logout
+            </a>
 
-</nav> 
+        </nav>
 
         <!-- User chip -->
         <div class="px-3 py-4 border-t border-white/10 flex-shrink-0">
@@ -290,7 +294,9 @@
                         <span class="fw-bold text-sm" style="color:#0d2b24;">Notifications</span>
                         <span class="badge ms-2 rounded-pill" style="background:#e1f5ee;color:#0F6E56;">4 new</span>
                     </li>
-                    <li><hr class="dropdown-divider my-1"></li>
+                    <li>
+                        <hr class="dropdown-divider my-1">
+                    </li>
                     <li>
                         <a class="dropdown-item py-2 d-flex align-items-start gap-2" href="#">
                             <i class="bi bi-exclamation-circle text-warning mt-1"></i>
@@ -318,9 +324,12 @@
                             </div>
                         </a>
                     </li>
-                    <li><hr class="dropdown-divider my-1"></li>
+                    <li>
+                        <hr class="dropdown-divider my-1">
+                    </li>
                     <li class="px-3 pb-2 text-center">
-                        <a href="#" class="text-xs fw-semibold" style="color:#1D9E75;text-decoration:none;">View all notifications</a>
+                        <a href="#" class="text-xs fw-semibold"
+                            style="color:#1D9E75;text-decoration:none;">View all notifications</a>
                     </li>
                 </ul>
             </div>
@@ -340,7 +349,9 @@
                         <span class="fw-bold text-sm" style="color:#0d2b24;">Messages</span>
                         <span class="badge ms-2 rounded-pill" style="background:#fde8ed;color:#c93254;">3 new</span>
                     </li>
-                    <li><hr class="dropdown-divider my-1"></li>
+                    <li>
+                        <hr class="dropdown-divider my-1">
+                    </li>
                     <li>
                         <a class="dropdown-item py-2 d-flex align-items-center gap-2" href="#">
                             <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0 fw-bold text-xs"
@@ -371,9 +382,12 @@
                             </div>
                         </a>
                     </li>
-                    <li><hr class="dropdown-divider my-1"></li>
+                    <li>
+                        <hr class="dropdown-divider my-1">
+                    </li>
                     <li class="px-3 pb-2 text-center">
-                        <a href="#" class="text-xs fw-semibold" style="color:#1D9E75;text-decoration:none;">View all messages</a>
+                        <a href="#" class="text-xs fw-semibold"
+                            style="color:#1D9E75;text-decoration:none;">View all messages</a>
                     </li>
                 </ul>
             </div>
@@ -398,18 +412,24 @@
                         <p class="mb-0 fw-bold text-sm" style="color:#0d2b24;">Aniket Singh</p>
                         <p class="mb-0 text-xs text-muted">Web Designer</p>
                     </li>
-                    <li><hr class="dropdown-divider my-1"></li>
-                    <li><a class="dropdown-item d-flex align-items-center gap-2 py-2 text-sm" href="users-profile.html">
-                        <i class="bi bi-person" style="color:#1D9E75;"></i> My Profile</a></li>
-                    <li><a class="dropdown-item d-flex align-items-center gap-2 py-2 text-sm" href="users-profile.html">
-                        <i class="bi bi-gear" style="color:#1D9E75;"></i> Account Settings</a></li>
+                    <li>
+                        <hr class="dropdown-divider my-1">
+                    </li>
+                    <li><a class="dropdown-item d-flex align-items-center gap-2 py-2 text-sm"
+                            href="users-profile.html">
+                            <i class="bi bi-person" style="color:#1D9E75;"></i> My Profile</a></li>
+                    <li><a class="dropdown-item d-flex align-items-center gap-2 py-2 text-sm"
+                            href="users-profile.html">
+                            <i class="bi bi-gear" style="color:#1D9E75;"></i> Account Settings</a></li>
                     <li><a class="dropdown-item d-flex align-items-center gap-2 py-2 text-sm" href="pages-faq.html">
-                        <i class="bi bi-question-circle" style="color:#1D9E75;"></i> Need Help?</a></li>
-                    <li><hr class="dropdown-divider my-1"></li>
+                            <i class="bi bi-question-circle" style="color:#1D9E75;"></i> Need Help?</a></li>
+                    <li>
+                        <hr class="dropdown-divider my-1">
+                    </li>
                     {{-- ✅ Sign Out in dropdown also uses confirmLogout() --}}
                     <li><a class="dropdown-item d-flex align-items-center gap-2 py-2 text-sm" href="#"
                             onclick="confirmLogout()" style="color:#e53e5b;">
-                        <i class="bi bi-box-arrow-right"></i> Sign Out</a></li>
+                            <i class="bi bi-box-arrow-right"></i> Sign Out</a></li>
                 </ul>
             </div>
 
@@ -425,7 +445,8 @@
     <footer id="footer" class="flex items-center justify-between px-6 py-3 bg-white border-t"
         style="border-color:#e2ece9;">
         <p class="mb-0 text-xs" style="color:#6b9e93;">
-            &copy; <span id="yr"></span> <strong style="color:#0d2b24;">MediStore</strong>. All Rights Reserved.
+            &copy; <span id="yr"></span> <strong style="color:#0d2b24;">MediStore</strong>. All Rights
+            Reserved.
         </p>
         <p class="mb-0 text-xs" style="color:#6b9e93;">
             Designed by <a href="https://bootstrapmade.com/"
@@ -452,7 +473,7 @@
 
         // Active sidebar link
         document.querySelectorAll('.sidebar-link').forEach(link => {
-            link.addEventListener('click', function () {
+            link.addEventListener('click', function() {
                 document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
                 this.classList.add('active');
             });

@@ -3,19 +3,37 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Medicine extends Model
 {
-    protected $fillable = [
-        'name',
-        'company',
-        'stock',
-        'price',
-        'description',
-        'expiry_date',
-        'category_id',
-        'subcategory_id'
-    ];
+    use SoftDeletes;
+protected $fillable = [
+
+    'category_id',
+    'subcategory_id',
+
+    'name',
+    'brand_name',
+    'medicine_type',
+    'unit',
+
+    'purchase_price',
+    'selling_price',
+
+    'stock',
+
+    'batch_number',
+
+    'manufacture_date',
+    'expiry_date',
+
+    'status',
+
+    'image',
+
+    'description',
+];
 
 
     public function category()
@@ -40,7 +58,7 @@ class Medicine extends Model
         return $query->where('stock', '<=', 0);
     }
 
-    
+
     public function scopeExpiringSoon($query, $days = 30)
     {
         return $query->whereBetween('expiry_date', [now(), now()->addDays($days)]);

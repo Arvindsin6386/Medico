@@ -33,6 +33,8 @@ Route::middleware('auth:admin')->group(function () {
 
     // Medicines (IMPORTANT)
     Route::resource('medicines', MedicineController::class);
+    Route::get('medicines-data', [MedicineController::class, 'getmedicine'])
+    ->name('medicines.data');
 
     // OPTIONAL (if you really want custom add page)
     // Route::get('/medicines/add', [MedicineController::class, 'create'])

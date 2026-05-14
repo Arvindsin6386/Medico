@@ -168,11 +168,20 @@
                                     {{-- ACTIONS --}}
                                     <td class="py-3">
                                         <div class="d-flex gap-2">
+  
+                                            {{-- ADD IMAGE --}}
+                                            <button class="btn btn-sm px-2 py-1"
+                                                style="background:#fff3cd; color:#856404;
+                                                 border-radius:8px; font-size:12px;"
+                                                data-bs-toggle="modal" data-bs-target="#addImageModal{{ $category->id }}"
+                                                title="Add Image">
+                                                <i class="bi bi-image"></i>
+                                            </button>
 
                                             {{-- EDIT --}}
                                             <button class="btn btn-sm px-2 py-1"
                                                 style="background:#e1f5ee; color:#085041;
-                                                   border-radius:8px; font-size:12px;"
+                                                border-radius:8px; font-size:12px;"
                                                 data-bs-toggle="modal" data-bs-target="#editCategory{{ $category->id }}">
                                                 <i class="bi bi-pencil"></i>
                                             </button>
@@ -184,13 +193,14 @@
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-sm px-2 py-1"
                                                     style="background:#fcebeb; color:#A32D2D;
-                                                       border-radius:8px; font-size:12px;">
+                                                   border-radius:8px; font-size:12px;">
                                                     <i class="bi bi-trash"></i>
                                                 </button>
                                             </form>
 
                                         </div>
                                     </td>
+
                                 </tr>
 
                                 {{-- EDIT MODAL --}}
@@ -206,8 +216,8 @@
                                                     data-bs-dismiss="modal"></button>
                                             </div>
 
-                                            <form action="{{ route('admin.categories.update', $category->id) }}" method="POST"
-                                                enctype="multipart/form-data">
+                                            <form action="{{ route('admin.categories.update', $category->id) }}"
+                                                method="POST" enctype="multipart/form-data">
                                                 @csrf
                                                 @method('PUT')
 
@@ -255,7 +265,8 @@
                                                                         style="height:60px; border-radius:8px;">
                                                                 </div>
                                                             @endif
-                                                            <input type="file" name="image" class="form-control"
+                                                            <input type="file" name="image[]" class="form-control"
+                                                                multiple
                                                                 accept="image/jpg,image/jpeg,image/png,image/webp">
                                                         </div>
 

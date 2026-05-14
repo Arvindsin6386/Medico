@@ -33,63 +33,44 @@
 
         {{-- STAT CARDS --}}
         <div class="row g-3 mb-4">
-
-            {{-- Total --}}
             <div class="col-md-4 col-6">
                 <div class="p-3 rounded-3" style="background:#e1f5ee; border:1px solid #9FE1CB;">
                     <p class="mb-1 text-muted" style="font-size:12px;">Total Subcategories</p>
-                    <h4 class="fw-bold mb-0" style="color:#085041;">
-                        {{ $subcategories->count() }}
-                    </h4>
+                    <h4 class="fw-bold mb-0" style="color:#085041;">{{ $subcategories->count() }}</h4>
                 </div>
             </div>
-
-            {{-- Active --}}
             <div class="col-md-4 col-6">
                 <div class="p-3 rounded-3" style="background:#e1f5ee; border:1px solid #9FE1CB;">
                     <p class="mb-1 text-muted" style="font-size:12px;">Active</p>
-                    <h4 class="fw-bold mb-0" style="color:#085041;">
-                        {{ $subcategories->where('status', 'active')->count() }}
+                    <h4 class="fw-bold mb-0" style="color:#085041;">{{ $subcategories->where('status', 'active')->count() }}
                     </h4>
                 </div>
             </div>
-
-            {{-- Inactive --}}
             <div class="col-md-4 col-6">
                 <div class="p-3 rounded-3" style="background:#fcebeb; border:1px solid #F7C1C1;">
                     <p class="mb-1 text-muted" style="font-size:12px;">Inactive</p>
                     <h4 class="fw-bold mb-0" style="color:#A32D2D;">
-                        {{ $subcategories->where('status', 'inactive')->count() }}
-                    </h4>
+                        {{ $subcategories->where('status', 'inactive')->count() }}</h4>
                 </div>
             </div>
-
         </div>
 
         {{-- SEARCH & FILTER BAR --}}
         <div class="card border-0 shadow-sm mb-3">
             <div class="card-body py-2">
                 <div class="row g-2 align-items-center">
-
-                    {{-- Search --}}
                     <div class="col-md-4">
                         <input type="text" id="searchInput" class="form-control form-control-sm"
                             placeholder="Search subcategory name...">
                     </div>
-
-                    {{-- Filter by Category --}}
                     <div class="col-md-3">
                         <select id="filterCategory" class="form-control form-control-sm">
                             <option value="">All Categories</option>
                             @foreach ($categories as $category)
-                                <option value="{{ strtolower($category->name) }}">
-                                    {{ $category->name }}
-                                </option>
+                                <option value="{{ strtolower($category->name) }}">{{ $category->name }}</option>
                             @endforeach
                         </select>
                     </div>
-
-                    {{-- Filter by Status --}}
                     <div class="col-md-3">
                         <select id="filterStatus" class="form-control form-control-sm">
                             <option value="">All Status</option>
@@ -97,14 +78,9 @@
                             <option value="inactive">Inactive</option>
                         </select>
                     </div>
-
-                    {{-- Reset --}}
                     <div class="col-md-2">
-                        <button onclick="resetFilters()" class="btn btn-sm btn-outline-secondary w-100">
-                            Reset
-                        </button>
+                        <button id="resetBtn" class="btn btn-sm btn-outline-secondary w-100">Reset</button>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -114,7 +90,6 @@
             <div class="card-body p-0">
                 <div class="table-responsive">
                     <table class="table table-hover mb-0" style="font-size:13px;">
-
                         <thead style="background:#f0f4f3;">
                             <tr>
                                 <th class="px-3 py-3" style="font-size:11px; color:#6b9e93;">#</th>
@@ -126,17 +101,14 @@
                                 <th class="py-3" style="font-size:11px; color:#6b9e93;">Actions</th>
                             </tr>
                         </thead>
-
-                        <tbody>
+                        <tbody id="subcategoryTableBody">
                             @forelse($subcategories as $index => $subcategory)
                                 <tr class="subcategory-row" data-name="{{ strtolower($subcategory->name) }}"
                                     data-category="{{ strtolower($subcategory->category->name ?? '') }}"
                                     data-status="{{ $subcategory->status }}">
 
-                                    {{-- # --}}
                                     <td class="px-3 py-3" style="color:#6b9e93;">{{ $index + 1 }}</td>
 
-                                    {{-- IMAGE --}}
                                     <td class="py-3">
                                         @if ($subcategory->image)
                                             <img src="{{ asset('storage/' . $subcategory->image) }}"
@@ -152,68 +124,49 @@
                                         @endif
                                     </td>
 
-                                    {{-- CATEGORY --}}
                                     <td class="py-3" style="color:#0d2b24;">
                                         {{ $subcategory->category->name ?? '—' }}
                                     </td>
 
-                                    {{-- NAME --}}
                                     <td class="py-3">
-                                        <p class="mb-0 fw-semibold" style="color:#0d2b24;">
-                                            {{ $subcategory->name }}
-                                        </p>
+                                        <p class="mb-0 fw-semibold" style="color:#0d2b24;">{{ $subcategory->name }}</p>
                                     </td>
 
-                                    {{-- DESCRIPTION --}}
                                     <td class="py-3" style="color:#0d2b24;">
                                         {{ Str::limit($subcategory->description, 40) ?? '—' }}
                                     </td>
 
-                                    {{-- STATUS --}}
                                     <td class="py-3">
                                         @if ($subcategory->status === 'active')
                                             <span class="badge rounded-pill px-2 py-1"
-                                                style="background:#e1f5ee; color:#085041; font-size:11px;">
-                                                Active
-                                            </span>
+                                                style="background:#e1f5ee; color:#085041; font-size:11px;">Active</span>
                                         @else
                                             <span class="badge rounded-pill px-2 py-1"
-                                                style="background:#fcebeb; color:#A32D2D; font-size:11px;">
-                                                Inactive
-                                            </span>
+                                                style="background:#fcebeb; color:#A32D2D; font-size:11px;">Inactive</span>
                                         @endif
                                     </td>
 
-                                    {{-- ACTIONS --}}
                                     <td class="py-3">
                                         <div class="d-flex gap-2">
-
-                                            {{-- EDIT --}}
                                             <button class="btn btn-sm px-2 py-1"
-                                                style="background:#e1f5ee; color:#085041;
-                                                   border-radius:8px; font-size:12px;"
+                                                style="background:#e1f5ee; color:#085041; border-radius:8px; font-size:12px;"
                                                 data-bs-toggle="modal"
                                                 data-bs-target="#editSubcategory{{ $subcategory->id }}">
                                                 <i class="bi bi-pencil"></i>
                                             </button>
-
-                                            {{-- DELETE --}}
-                                            <form action="{{ route('admin.subcategories.destroy', $subcategory->id) }}"
-                                                method="POST" onsubmit="return confirm('Delete this subcategory?')">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-sm px-2 py-1"
-                                                    style="background:#fcebeb; color:#A32D2D;
-                                                       border-radius:8px; font-size:12px;">
-                                                    <i class="bi bi-trash"></i>
-                                                </button>
-                                            </form>
-
+                                            <button type="button" class="btn btn-sm px-2 py-1 delete-btn"
+                                                style="background:#fcebeb; color:#A32D2D; border-radius:8px; font-size:12px;"
+                                                data-id="{{ $subcategory->id }}"
+                                                data-url="{{ route('admin.subcategories.destroy', $subcategory->id) }}">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
                                         </div>
                                     </td>
                                 </tr>
 
-                                {{-- EDIT MODAL --}}
+                                {{-- ============================
+                                     EDIT MODAL
+                                     ============================ --}}
                                 <div class="modal fade" id="editSubcategory{{ $subcategory->id }}" tabindex="-1">
                                     <div class="modal-dialog modal-lg">
                                         <div class="modal-content">
@@ -231,6 +184,9 @@
                                                 @csrf
                                                 @method('PUT')
 
+                                                {{-- CHANGE 1: hidden field so we know which modal to reopen --}}
+                                                <input type="hidden" name="_edit_id" value="{{ $subcategory->id }}">
+
                                                 <div class="modal-body">
                                                     <div class="row g-3">
 
@@ -240,15 +196,24 @@
                                                                 style="font-size:13px; font-weight:500;">
                                                                 Category <span class="text-danger">*</span>
                                                             </label>
-                                                            <select name="category_id" class="form-control" required>
+                                                            {{-- CHANGE 3: old() keeps the user's selected value after error --}}
+                                                            <select name="category_id"
+                                                                class="form-control {{ $errors->has('category_id') && old('_edit_id') == $subcategory->id ? 'is-invalid' : '' }}"
+                                                                required>
                                                                 <option value="">-- Select Category --</option>
                                                                 @foreach ($categories as $category)
                                                                     <option value="{{ $category->id }}"
-                                                                        {{ $subcategory->category_id == $category->id ? 'selected' : '' }}>
+                                                                        {{ old('category_id', $subcategory->category_id) == $category->id ? 'selected' : '' }}>
                                                                         {{ $category->name }}
                                                                     </option>
                                                                 @endforeach
                                                             </select>
+                                                            {{-- CHANGE 2: show error only for THIS subcategory's modal --}}
+                                                            @if ($errors->has('category_id') && old('_edit_id') == $subcategory->id)
+                                                                <span class="text-danger" style="font-size:12px;">
+                                                                    {{ $errors->first('category_id') }}
+                                                                </span>
+                                                            @endif
                                                         </div>
 
                                                         {{-- STATUS --}}
@@ -257,16 +222,23 @@
                                                                 style="font-size:13px; font-weight:500;">
                                                                 Status <span class="text-danger">*</span>
                                                             </label>
-                                                            <select name="status" class="form-control" required>
+                                                            <select name="status"
+                                                                class="form-control {{ $errors->has('status') && old('_edit_id') == $subcategory->id ? 'is-invalid' : '' }}"
+                                                                required>
                                                                 <option value="active"
-                                                                    {{ $subcategory->status === 'active' ? 'selected' : '' }}>
+                                                                    {{ old('status', $subcategory->status) === 'active' ? 'selected' : '' }}>
                                                                     Active
                                                                 </option>
                                                                 <option value="inactive"
-                                                                    {{ $subcategory->status === 'inactive' ? 'selected' : '' }}>
+                                                                    {{ old('status', $subcategory->status) === 'inactive' ? 'selected' : '' }}>
                                                                     Inactive
                                                                 </option>
                                                             </select>
+                                                            @if ($errors->has('status') && old('_edit_id') == $subcategory->id)
+                                                                <span class="text-danger" style="font-size:12px;">
+                                                                    {{ $errors->first('status') }}
+                                                                </span>
+                                                            @endif
                                                         </div>
 
                                                         {{-- NAME --}}
@@ -275,8 +247,14 @@
                                                                 style="font-size:13px; font-weight:500;">
                                                                 Subcategory Name <span class="text-danger">*</span>
                                                             </label>
-                                                            <input type="text" name="name" class="form-control"
-                                                                value="{{ $subcategory->name }}" required>
+                                                            <input type="text" name="name"
+                                                                class="form-control {{ $errors->has('name') && old('_edit_id') == $subcategory->id ? 'is-invalid' : '' }}"
+                                                                value="{{ old('name', $subcategory->name) }}" required>
+                                                            @if ($errors->has('name') && old('_edit_id') == $subcategory->id)
+                                                                <span class="text-danger" style="font-size:12px;">
+                                                                    {{ $errors->first('name') }}
+                                                                </span>
+                                                            @endif
                                                         </div>
 
                                                         {{-- DESCRIPTION --}}
@@ -285,8 +263,14 @@
                                                                 style="font-size:13px; font-weight:500;">
                                                                 Description
                                                             </label>
-                                                            <input type="text" name="description" class="form-control"
-                                                                value="{{ $subcategory->description }}">
+                                                            <input type="text" name="description"
+                                                                class="form-control {{ $errors->has('description') && old('_edit_id') == $subcategory->id ? 'is-invalid' : '' }}"
+                                                                value="{{ old('description', $subcategory->description) }}">
+                                                            @if ($errors->has('description') && old('_edit_id') == $subcategory->id)
+                                                                <span class="text-danger" style="font-size:12px;">
+                                                                    {{ $errors->first('description') }}
+                                                                </span>
+                                                            @endif
                                                         </div>
 
                                                         {{-- IMAGE --}}
@@ -299,18 +283,22 @@
                                                                 <div class="mb-2">
                                                                     <img id="editPreview{{ $subcategory->id }}"
                                                                         src="{{ asset('storage/' . $subcategory->image) }}"
-                                                                        alt="Current Image"
                                                                         style="height:60px; border-radius:8px;">
                                                                 </div>
                                                             @else
                                                                 <img id="editPreview{{ $subcategory->id }}"
                                                                     src="#" alt="Preview"
-                                                                    style="display:none; margin-bottom:8px;
-                                                                       height:60px; border-radius:8px;">
+                                                                    style="display:none; margin-bottom:8px; height:60px; border-radius:8px;">
                                                             @endif
-                                                            <input type="file" name="image" class="form-control"
+                                                            <input type="file" name="image"
+                                                                class="form-control image-input"
                                                                 accept="image/jpg,image/jpeg,image/png,image/webp"
-                                                                onchange="previewImage(event, 'editPreview{{ $subcategory->id }}')">
+                                                                data-preview="editPreview{{ $subcategory->id }}">
+                                                            @if ($errors->has('image') && old('_edit_id') == $subcategory->id)
+                                                                <span class="text-danger" style="font-size:12px;">
+                                                                    {{ $errors->first('image') }}
+                                                                </span>
+                                                            @endif
                                                         </div>
 
                                                     </div>
@@ -332,7 +320,7 @@
                                 {{-- END EDIT MODAL --}}
 
                             @empty
-                                <tr>
+                                <tr id="emptyRow">
                                     <td colspan="7" class="text-center py-5">
                                         <i class="bi bi-diagram-3 fs-1 text-muted"></i>
                                         <p class="text-muted mt-2">No subcategories found.</p>
@@ -345,7 +333,6 @@
                                 </tr>
                             @endforelse
                         </tbody>
-
                     </table>
                 </div>
             </div>
@@ -357,26 +344,22 @@
     <div class="modal fade" id="addSubcategoryModal" tabindex="-1">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-
                 <div class="modal-header" style="border-bottom:1px solid #e2ece9;">
-                    <h5 class="modal-title fw-bold" style="color:#0d2b24; font-size:15px;">
-                        Add Subcategory
-                    </h5>
+                    <h5 class="modal-title fw-bold" style="color:#0d2b24; font-size:15px;">Add Subcategory</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-
                 <form action="{{ route('admin.subcategories.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
-
                     <div class="modal-body">
                         <div class="row g-3">
 
-                            {{-- CATEGORY --}}
                             <div class="col-md-6">
                                 <label class="form-label" style="font-size:13px; font-weight:500;">
                                     Category <span class="text-danger">*</span>
                                 </label>
-                                <select name="category_id" class="form-control" required>
+                                <select name="category_id"
+                                    class="form-control {{ $errors->has('category_id') && !old('_edit_id') ? 'is-invalid' : '' }}"
+                                    required>
                                     <option value="">-- Select Category --</option>
                                     @foreach ($categories as $category)
                                         <option value="{{ $category->id }}"
@@ -385,136 +368,267 @@
                                         </option>
                                     @endforeach
                                 </select>
-                                @error('category_id')
-                                    <span class="text-danger" style="font-size:12px;">{{ $message }}</span>
-                                @enderror
+                                @if ($errors->has('category_id') && !old('_edit_id'))
+                                    <span class="text-danger"
+                                        style="font-size:12px;">{{ $errors->first('category_id') }}</span>
+                                @endif
                             </div>
 
-                            {{-- STATUS --}}
                             <div class="col-md-6">
                                 <label class="form-label" style="font-size:13px; font-weight:500;">
                                     Status <span class="text-danger">*</span>
                                 </label>
-                                <select name="status" class="form-control" required>
+                                <select name="status"
+                                    class="form-control {{ $errors->has('status') && !old('_edit_id') ? 'is-invalid' : '' }}"
+                                    required>
                                     <option value="">-- Select --</option>
                                     <option value="active" {{ old('status') == 'active' ? 'selected' : '' }}>Active
                                     </option>
                                     <option value="inactive" {{ old('status') == 'inactive' ? 'selected' : '' }}>Inactive
                                     </option>
                                 </select>
-                                @error('status')
-                                    <span class="text-danger" style="font-size:12px;">{{ $message }}</span>
-                                @enderror
+                                @if ($errors->has('status') && !old('_edit_id'))
+                                    <span class="text-danger"
+                                        style="font-size:12px;">{{ $errors->first('status') }}</span>
+                                @endif
                             </div>
 
-                            {{-- NAME --}}
                             <div class="col-md-6">
                                 <label class="form-label" style="font-size:13px; font-weight:500;">
                                     Subcategory Name <span class="text-danger">*</span>
                                 </label>
-                                <input type="text" name="name" class="form-control" placeholder="e.g. Painkillers"
-                                    value="{{ old('name') }}" required>
-                                @error('name')
-                                    <span class="text-danger" style="font-size:12px;">{{ $message }}</span>
-                                @enderror
+                                <input type="text" name="name"
+                                    class="form-control {{ $errors->has('name') && !old('_edit_id') ? 'is-invalid' : '' }}"
+                                    placeholder="e.g. Painkillers" value="{{ old('name') }}" required>
+                                @if ($errors->has('name') && !old('_edit_id'))
+                                    <span class="text-danger" style="font-size:12px;">{{ $errors->first('name') }}</span>
+                                @endif
                             </div>
 
-                            {{-- DESCRIPTION --}}
                             <div class="col-md-6">
-                                <label class="form-label" style="font-size:13px; font-weight:500;">
-                                    Description
-                                </label>
-                                <input type="text" name="description" class="form-control"
+                                <label class="form-label" style="font-size:13px; font-weight:500;">Description</label>
+                                <input type="text" name="description"
+                                    class="form-control {{ $errors->has('description') && !old('_edit_id') ? 'is-invalid' : '' }}"
                                     placeholder="Optional short description" value="{{ old('description') }}">
-                                @error('description')
-                                    <span class="text-danger" style="font-size:12px;">{{ $message }}</span>
-                                @enderror
+                                @if ($errors->has('description') && !old('_edit_id'))
+                                    <span class="text-danger"
+                                        style="font-size:12px;">{{ $errors->first('description') }}</span>
+                                @endif
                             </div>
 
-                            {{-- IMAGE --}}
                             <div class="col-md-12">
-                                <label class="form-label" style="font-size:13px; font-weight:500;">
-                                    Image
-                                </label>
-                                <input type="file" name="image" class="form-control"
-                                    accept="image/jpg,image/jpeg,image/png,image/webp"
-                                    onchange="previewImage(event, 'addPreview')">
-                                @error('image')
-                                    <span class="text-danger" style="font-size:12px;">{{ $message }}</span>
-                                @enderror
+                                <label class="form-label" style="font-size:13px; font-weight:500;">Image</label>
+                                <input type="file" name="image" class="form-control image-input"
+                                    accept="image/jpg,image/jpeg,image/png,image/webp" data-preview="addPreview">
+                                @if ($errors->has('image') && !old('_edit_id'))
+                                    <span class="text-danger"
+                                        style="font-size:12px;">{{ $errors->first('image') }}</span>
+                                @endif
                                 <img id="addPreview" src="#" alt="Preview"
-                                    style="display:none; margin-top:8px;
-                                       width:60px; height:60px;
-                                       object-fit:cover; border-radius:8px;">
+                                    style="display:none; margin-top:8px; width:60px; height:60px;
+                                           object-fit:cover; border-radius:8px;">
                             </div>
 
                         </div>
                     </div>
-
                     <div class="modal-footer" style="border-top:1px solid #e2ece9;">
                         <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Cancel</button>
                         <button type="submit" class="btn btn-sm px-4" style="background:#1D9E75; color:#fff;">
                             Add Subcategory
                         </button>
                     </div>
-
                 </form>
             </div>
         </div>
     </div>
 
-    {{-- SEARCH, FILTER & IMAGE PREVIEW JAVASCRIPT --}}
     <script>
-        // Search input
-        document.getElementById('searchInput')
-            .addEventListener('input', filterTable);
+        $(document).ready(function() {
 
-        // Category filter
-        document.getElementById('filterCategory')
-            .addEventListener('change', filterTable);
+            // =========================================
+            // SEARCH FUNCTION
+            // =========================================
 
-        // Status filter
-        document.getElementById('filterStatus')
-            .addEventListener('change', filterTable);
+            $('#searchInput').on('keyup', function() {
 
-        function filterTable() {
-            const search = document.getElementById('searchInput').value.toLowerCase();
-            const category = document.getElementById('filterCategory').value.toLowerCase();
-            const status = document.getElementById('filterStatus').value.toLowerCase();
+                // Get search text
+                var search = $(this).val().toLowerCase();
 
-            document.querySelectorAll('.subcategory-row').forEach(row => {
-                const name = row.dataset.name;
-                const cat = row.dataset.category;
-                const rowStat = row.dataset.status;
+                // Loop all rows
+                $('.subcategory-row').each(function() {
 
-                const matchSearch = name.includes(search);
-                const matchCategory = category === '' || cat.includes(category);
-                const matchStatus = status === '' || rowStat === status;
+                    // Get row name
+                    var name = $(this).data('name');
 
-                row.style.display = (matchSearch && matchCategory && matchStatus) ? '' : 'none';
+                    // Check search match
+                    if (name.includes(search)) {
+
+                        // Show row
+                        $(this).show();
+
+                    } else {
+
+                        // Hide row
+                        $(this).hide();
+                    }
+                });
             });
-        }
 
-        function resetFilters() {
-            document.getElementById('searchInput').value = '';
-            document.getElementById('filterCategory').value = '';
-            document.getElementById('filterStatus').value = '';
-            filterTable();
-        }
 
-        // Image preview for add and edit
-        function previewImage(event, previewId) {
-            const preview = document.getElementById(previewId);
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    preview.src = e.target.result;
-                    preview.style.display = 'block';
-                };
-                reader.readAsDataURL(file);
+
+            // =========================================
+            // RESET BUTTON
+            // =========================================
+
+            $('#resetBtn').click(function() {
+
+                // Empty search box
+                $('#searchInput').val('');
+
+                // Show all rows
+                $('.subcategory-row').show();
+            });
+
+
+
+            // =========================================
+            // DELETE USING AJAX
+            // =========================================
+
+            $('.delete-btn').click(function() {
+
+                // Get delete URL
+                var url = $(this).data('url');
+
+                // Current row
+                var row = $(this).closest('tr');
+
+
+                // Confirm delete
+                if (confirm('Are you sure?')) {
+
+                    $.ajax({
+
+                        url: url,
+
+                        type: 'POST',
+
+                        data: {
+
+                            _method: 'DELETE',
+
+                            _token: '{{ csrf_token() }}'
+                        },
+
+                        success: function() {
+
+                            // Remove row
+                            row.remove();
+
+                            alert('Deleted Successfully');
+                        },
+
+                        error: function() {
+
+                            alert('Delete Failed');
+                        }
+
+                    });
+                }
+            });
+
+
+
+            // =========================================
+            // IMAGE PREVIEW
+            // =========================================
+
+            $('.image-input').change(function() {
+
+                // Selected file
+                var file = this.files[0];
+
+                // Preview image id
+                var preview = $(this).data('preview');
+
+
+                // Check file selected
+                if (file) {
+
+                    // Read image
+                    var reader = new FileReader();
+
+                    reader.onload = function(e) {
+
+                        // Show image preview
+                        $('#' + preview)
+                            .attr('src', e.target.result)
+                            .show();
+                    };
+
+                    reader.readAsDataURL(file);
+                }
+            });
+
+        });
+    </script>
+
+{{-- REOPEN EDIT MODAL AFTER VALIDATION ERROR --}}
+<script>
+
+window.onload = function () {
+
+    @if ($errors->any())
+
+        // Get old edit modal id
+        var editId = "{{ old('_edit_id') }}";
+
+        // Check edit modal exists
+        if (editId) {
+
+            // Create modal id
+            var modalId = 'editSubcategory' + editId;
+
+            // Find modal
+            var modalElement =
+                document.getElementById(modalId);
+
+            // Open modal
+            if (modalElement) {
+
+                setTimeout(function () {
+
+                    var modal =
+                        new bootstrap.Modal(modalElement);
+
+                    modal.show();
+
+                }, 300);
+            }
+
+        } else {
+
+            // OPEN ADD MODAL IF ADD FORM HAS ERROR
+            var addModal =
+                document.getElementById('addSubcategoryModal');
+
+            if (addModal) {
+
+                setTimeout(function () {
+
+                    var modal =
+                        new bootstrap.Modal(addModal);
+
+                    modal.show();
+
+                }, 300);
             }
         }
-    </script>
+
+    @endif
+
+};
+
+</script>
 
 @endsection
