@@ -9,10 +9,10 @@ use App\Http\Controllers\Admin\SubcategoryController;
 use App\Http\Controllers\Admin\MedicineController;
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\BillingController;
+use App\Http\Controllers\Admin\MedicineImagesController;
 
 // ================== GUEST ==================
 Route::middleware('guest:admin')->group(function () {
-
     Route::get('/login', [LoginController::class, 'showLogin'])->name('login');
     Route::post('/login', [LoginController::class, 'login'])->name('login.submit');
 });
@@ -22,46 +22,43 @@ Route::middleware('auth:admin')->group(function () {
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    // FIXED LOGOUT (IMPORTANT)
     Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
 
     // Categories
     Route::resource('categories', CategoryController::class);
 
-    // SubCategorie
+    // SubCategories
     Route::resource('subcategories', SubcategoryController::class);
 
-    // Medicines (IMPORTANT)
-    Route::resource('medicines', MedicineController::class);
+    // Medicine Images (MUST be before resource)
+    Route::get('medicines/{id}/images', [MedicineImagesController::class, 'index'])
+        ->name('medicines.images.index');
+    Route::post('medicines/{id}/images', [MedicineImagesController::class, 'store'])
+        ->name('medicines.images.store');
+    Route::post('medicines/{id}/images/update', [MedicineImagesController::class, 'update'])
+        ->name('medicines.images.update');
+    Route::delete('medicines/{id}/images/{imageId}', [MedicineImagesController::class, 'destroy'])
+        ->name('medicines.images.destroy');
+
+    // Medicines
     Route::get('medicines-data', [MedicineController::class, 'getmedicine'])
-    ->name('medicines.data');
+        ->name('medicines.data');
+    Route::resource('medicines', MedicineController::class);
 
-    // OPTIONAL (if you really want custom add page)
-    // Route::get('/medicines/add', [MedicineController::class, 'create'])
-    //     ->name('medicines.step.category');
-    Route::get('/reports',           [ReportController::class, 'index'])->name('reports.index');
-    Route::get('/reports/sales',     [ReportController::class, 'sales'])->name('reports.sales');
-    Route::get('/reports/inventory', [ReportController::class, 'inventory'])->name('reports.inventory');
-    Route::get('/reports/expiry',    [ReportController::class, 'expiry'])->name('reports.expiry');
-    Route::get('/reports/purchases', [ReportController::class, 'purchases'])->name('reports.purchases');
-    Route::get('/reports/profit',    [ReportController::class, 'profit'])->name('reports.profit');
+    // Reports
+    Route::prefix('reports')->name('reports.')->group(function () {
+        Route::get('/',          [ReportController::class, 'index'])->name('index');
+        Route::get('/sales',     [ReportController::class, 'sales'])->name('sales');
+        Route::get('/inventory', [ReportController::class, 'inventory'])->name('inventory');
+        Route::get('/expiry',    [ReportController::class, 'expiry'])->name('expiry');
+        Route::get('/purchases', [ReportController::class, 'purchases'])->name('purchases');
+        Route::get('/profit',    [ReportController::class, 'profit'])->name('profit');
+    });
 
-
-    Route::get('/billing', [BillingController::class, 'index'])
-        ->name('billing.index');
-
-    Route::post('/billing/store', [BillingController::class, 'store'])
-        ->name('billing.store');
-
-    // Search medicine by name/barcode (Ajax GET)
-    // Route::get('/search-medicine', [BillingController::class, 'searchMedicine'])->name('search');
-
-    // // List all bills
-    // Route::get('/list', [BillingController::class, 'billList'])->name('list');
-
-    // // Print a single bill
-    // Route::get('/{id}/print', [BillingController::class, 'printBill'])->name('print');
-
-
+    // Billing
+    Route::prefix('billing')->name('billing.')->group(function () {
+        Route::get('/',       [BillingController::class, 'index'])->name('index');
+        Route::post('/store', [BillingController::class, 'store'])->name('store');
+    });
 
 });

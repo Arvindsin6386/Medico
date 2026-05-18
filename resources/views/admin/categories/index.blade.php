@@ -116,18 +116,34 @@
 
                                     {{-- IMAGE --}}
                                     <td class="py-3">
-                                        @if ($category->image)
-                                            <img src="{{ asset('storage/' . $category->image) }}"
-                                                alt="{{ $category->name }}"
-                                                style="width:40px; height:40px; object-fit:cover; border-radius:8px;">
-                                        @else
-                                            <div
-                                                style="width:40px; height:40px; background:#e1f5ee;
-                                                    border-radius:8px; display:flex;
-                                                    align-items:center; justify-content:center;">
-                                                <i class="bi bi-image text-muted" style="font-size:16px;"></i>
-                                            </div>
-                                        @endif
+
+                                        <div class="d-flex gap-1 flex-wrap">
+
+                                            @if ($category->images && count($category->images) > 0)
+                                                @foreach ($category->images as $img)
+                                                    <img src="{{ asset('storage/' . $img) }}" alt="Image"
+                                                        style="width:40px;
+                                                         height:40px;
+                                                           object-fit:cover;
+                                                    border-radius:8px;">
+                                                @endforeach
+                                            @else
+                                                <div
+                                                    style="width:40px;
+                                                    height:40px;
+                                                         background:#e1f5ee;
+                                                     border-radius:8px;
+                                                          display:flex;
+                                                      align-items:center;
+                                                        justify-content:center;">
+
+                                                    <i class="bi bi-image text-muted"></i>
+
+                                                </div>
+                                            @endif
+
+                                        </div>
+
                                     </td>
 
                                     {{-- NAME --}}
@@ -168,7 +184,7 @@
                                     {{-- ACTIONS --}}
                                     <td class="py-3">
                                         <div class="d-flex gap-2">
-  
+
                                             {{-- ADD IMAGE --}}
                                             <button class="btn btn-sm px-2 py-1"
                                                 style="background:#fff3cd; color:#856404;
@@ -254,20 +270,35 @@
 
                                                         {{-- IMAGE --}}
                                                         <div class="col-md-12">
+
                                                             <label class="form-label"
                                                                 style="font-size:13px; font-weight:500;">
-                                                                Image
+
+                                                                Images
+
                                                             </label>
-                                                            @if ($category->image)
-                                                                <div class="mb-2">
-                                                                    <img src="{{ asset('storage/' . $category->image) }}"
-                                                                        alt="Current Image"
-                                                                        style="height:60px; border-radius:8px;">
+
+                                                            {{-- OLD IMAGES --}}
+                                                            @if ($category->images && count($category->images) > 0)
+                                                                <div class="d-flex gap-2 flex-wrap mb-3">
+
+                                                                    @foreach ($category->images as $img)
+                                                                        <img src="{{ asset('storage/' . $img) }}"
+                                                                            alt="Image"
+                                                                            style="width:60px;
+                                                                           height:60px;
+                                                                         object-fit:cover;
+                                                                          border-radius:8px;">
+                                                                    @endforeach
+
                                                                 </div>
                                                             @endif
-                                                            <input type="file" name="image[]" class="form-control"
+
+                                                            {{-- NEW IMAGE INPUT --}}
+                                                            <input type="file" name="images[]" class="form-control"
                                                                 multiple
                                                                 accept="image/jpg,image/jpeg,image/png,image/webp">
+
                                                         </div>
 
                                                         {{-- DESCRIPTION --}}
@@ -296,6 +327,57 @@
                                     </div>
                                 </div>
                                 {{-- END EDIT MODAL --}}
+                                {{-- ADD IMAGE MODAL --}}
+                                <div class="modal fade" id="addImageModal{{ $category->id }}" tabindex="-1">
+
+                                    <div class="modal-dialog modal-md">
+
+                                        <div class="modal-content">
+
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Add Images</h5>
+
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal">
+                                                </button>
+                                            </div>
+
+                                            <form action="{{ route('admin.categories.update', $category->id) }}"
+                                                method="POST" enctype="multipart/form-data">
+
+                                                @csrf
+                                                @method('PUT')
+
+                                                <div class="modal-body">
+
+                                                    <label class="form-label">
+                                                        Upload Multiple Images
+                                                    </label>
+
+                                                    <input type="file" name="images[]" class="form-control" multiple
+                                                        accept="image/jpg,image/jpeg,image/png,image/webp">
+
+                                                </div>
+
+                                                <div class="modal-footer">
+
+                                                    <button type="button" class="btn btn-secondary btn-sm"
+                                                        data-bs-dismiss="modal">
+                                                        Close
+                                                    </button>
+
+                                                    <button type="submit" class="btn btn-success btn-sm">
+                                                        Upload
+                                                    </button>
+
+                                                </div>
+
+                                            </form>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
 
                             @empty
                                 <tr>
@@ -362,7 +444,7 @@
                                 <label class="form-label" style="font-size:13px; font-weight:500;">
                                     Image
                                 </label>
-                                <input type="file" name="image" class="form-control"
+                                <input type="file" name="images[]" class="form-control" multiple
                                     accept="image/jpg,image/jpeg,image/png,image/webp">
                             </div>
 

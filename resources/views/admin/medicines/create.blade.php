@@ -1,127 +1,144 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container">
-
-        @if (session('success'))
-            <div class="alert alert-success">{{ session('success') }}</div>
-        @endif
-        @if (session('error'))
-            <div class="alert alert-danger">{{ session('error') }}</div>
-        @endif
+    <div class="container py-4">
 
         <div class="card">
             <div class="card-header">
-                <h5 class="mb-0">Add Medicine</h5>
+                <h5>Add Medicine</h5>
             </div>
+
             <div class="card-body">
-                <form action="{{ route('admin.medicines.store') }}" method="POST">
+
+                <form action="{{ route('admin.medicines.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
+
+                    {{-- CATEGORY + SUBCATEGORY --}}
                     <div class="row">
 
-                        {{-- Category --}}
                         <div class="col-md-6 mb-3">
-                            <label>Category <span class="text-danger">*</span></label>
+                            <label>Category</label>
                             <select name="category_id" id="category_id" class="form-control" required>
-                                <option value="">-- Select Category --</option>
-                                @foreach ($categories as $category)
-                                    <option value="{{ $category->id }}"
-                                        {{ old('category_id') == $category->id ? 'selected' : '' }}>
-                                        {{ $category->name }}
-                                    </option>
+                                <option value="">Select</option>
+                                @foreach ($categories as $cat)
+                                    <option value="{{ $cat->id }}">{{ $cat->name }}</option>
                                 @endforeach
                             </select>
-                            @error('category_id')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
                         </div>
 
-                        {{-- Subcategory --}}
                         <div class="col-md-6 mb-3">
-                            <label>Subcategory <span class="text-danger">*</span></label>
-                            <select name="subcategory_id" id="subcategory_id" class="form-control" required>
-                                <option value="">-- Select Subcategory --</option>
-                                @foreach ($subcategories as $subcategory)
-                                    <option value="{{ $subcategory->id }}" data-category="{{ $subcategory->category_id }}"
-                                        {{ old('subcategory_id') == $subcategory->id ? 'selected' : '' }}>
-                                        {{ $subcategory->name }}
+                            <label>Subcategory</label>
+                            <select name="subcategory_id" id="subcategory_id" class="form-control">
+                                <option value="">Select</option>
+                                @foreach ($subcategories as $sub)
+                                    <option value="{{ $sub->id }}" data-category="{{ $sub->category_id }}">
+                                        {{ $sub->name }}
                                     </option>
                                 @endforeach
                             </select>
-                            @error('subcategory_id')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
                         </div>
 
                     </div>
 
-                    {{-- Step 3: Medicine Name --}}
+                    {{-- NAME --}}
                     <div class="mb-3">
-                        <label>Medicine Name <span class="text-danger">*</span></label>
-                        <input type="text" name="name" class="form-control" placeholder="Enter medicine name"
-                            value="{{ old('name') }}" required>
-                        @error('name')
-                            <span class="text-danger">{{ $message }}</span>
-                        @enderror
+                        <label>Medicine Name</label>
+                        <input type="text" name="name" class="form-control" required>
                     </div>
-                    <div class="mb-3">
-                        <label>Stock Quantity</label>
-                        <input type="number" name="stock" class="form-control" placeholder="e.g. 100"
-                            value="{{ old('stock', 0) }}" min="0">
-                        @error('stock')
-                            <span class="text-danger" style="font-size:12px;">{{ $message }}</span>
-                        @enderror
-                    </div>
+
+                    {{-- BRAND + TYPE + UNIT --}}
                     <div class="row">
 
-                        {{-- Price --}}
-                        <div class="col-md-6 mb-3">
-                            <label>Price <span class="text-danger">*</span></label>
-                            <input type="number" name="price" class="form-control" placeholder="Enter price"
-                                value="{{ old('price') }}" required>
-                            @error('price')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
+                        <div class="col-md-4 mb-3">
+                            <label>Brand Name</label>
+                            <input type="text" name="brand_name" class="form-control">
                         </div>
- 
-                        {{-- Description --}}
+
+                        <div class="col-md-4 mb-3">
+                            <label>Medicine Type</label>
+                            <select name="medicine_type" class="form-control">
+                                <option value="">Select</option>
+                                <option>Tablet</option>
+                                <option>Capsule</option>
+                                <option>Syrup</option>
+                                <option>Injection</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <label>Unit</label>
+                            <select name="unit" class="form-control">
+                                <option value="">Select</option>
+                                <option>Strip</option>
+                                <option>Bottle</option>
+                                <option>Box</option>
+                            </select>
+                        </div>
+
+                    </div>
+
+                    {{-- PRICES --}}
+                    <div class="row">
+
                         <div class="col-md-6 mb-3">
-                            <label>Description</label>
-                            <input type="text" name="description" class="form-control" placeholder="Enter description"
-                                value="{{ old('description') }}">
-                            @error('description')
+                            <label>Purchase Price</label>
+                            <input type="number" name="purchase_price" class="form-control">
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label>Selling Price</label>
+                            <input type="number" name="selling_price" class="form-control">
+                        </div>
+
+                    </div>
+
+                    {{-- STOCK + EXPIRY --}}
+                    <div class="row">
+
+                        <div class="col-md-6 mb-3">
+                            <label>Stock</label>
+                            <input type="number" name="stock" class="form-control" value="0">
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label>Expiry Date</label>
+                            <input type="date" name="expiry_date" class="form-control">
+                        </div>
+                        {{-- IMAGE --}}
+                        <div class="mb-3">
+                            <label>Medicine Image</label>
+
+                            <input type="file" name="image" class="form-control"
+                                accept="image/jpg,image/jpeg,image/png,image/webp">
+
+                            @error('image')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
 
                     </div>
 
-                    <button type="submit" class="btn btn-primary">Add Medicine</button>
-                    <a href="{{ route('admin.medicines.index') }}" class="btn btn-secondary">View All</a>
-
+                    <button class="btn btn-success">Save Medicine</button>
                 </form>
+
             </div>
         </div>
 
     </div>
 
-    {{-- Filter subcategory based on selected category --}}
+    {{-- SUBCATEGORY FILTER --}}
     <script>
-        const categorySelect = document.getElementById('category_id');
-        const subcategorySelect = document.getElementById('subcategory_id');
-        const allOptions = Array.from(subcategorySelect.options);
+        document.getElementById('category_id').addEventListener('change', function() {
 
-        categorySelect.addEventListener('change', function() {
-            const selectedCategory = this.value;
+            let categoryId = this.value;
+            let sub = document.getElementById('subcategory_id');
 
-            // reset subcategory
-            subcategorySelect.innerHTML = '<option value="">-- Select Subcategory --</option>';
-
-            allOptions.forEach(option => {
-                if (option.dataset.category === selectedCategory || option.value === '') {
-                    subcategorySelect.appendChild(option.cloneNode(true));
-                }
+            Array.from(sub.options).forEach(opt => {
+                opt.style.display = (opt.dataset.category == categoryId || opt.value == "") ?
+                    "block" :
+                    "none";
             });
+
         });
     </script>
 @endsection

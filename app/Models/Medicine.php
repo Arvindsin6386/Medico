@@ -8,32 +8,32 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Medicine extends Model
 {
     use SoftDeletes;
-protected $fillable = [
+    protected $fillable = [
 
-    'category_id',
-    'subcategory_id',
+        'category_id',
+        'subcategory_id',
 
-    'name',
-    'brand_name',
-    'medicine_type',
-    'unit',
+        'name',
+        'brand_name',
+        'medicine_type',
+        'unit',
 
-    'purchase_price',
-    'selling_price',
+        'purchase_price',
+        'selling_price',
 
-    'stock',
+        'stock',
 
-    'batch_number',
+        'batch_number',
 
-    'manufacture_date',
-    'expiry_date',
+        'manufacture_date',
+        'expiry_date',
 
-    'status',
+        'status',
 
-    'image',
+        'image',
 
-    'description',
-];
+        'description',
+    ];
 
 
     public function category()
@@ -67,5 +67,14 @@ protected $fillable = [
     public function scopeAlreadyExpired($query)
     {
         return $query->where('expiry_date', '<', now());
+    }
+
+    public function images()
+    {
+        return $this->hasMany(MedicineImages::class);
+    }
+    public function billItems()
+    {
+        return $this->hasMany(BillItem::class);
     }
 }

@@ -19,40 +19,39 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name'        => 'required|string|max:255|unique:categories,name',
-            'description' => 'nullable|string|max:500',
-            'status'      => 'required|in:active,inactive',
-
-            // multiple image validation
-            'images.*'    => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'name' => 'required',
+            'status' => 'required',
+            'images.*' => 'image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
         $images = [];
 
-        // upload multiple images
         if ($request->hasFile('images')) {
 
-            foreach ($request->file('images') as $image) {
+            foreach ($request->file('images') as $file) {
 
-                $path = $image->store('categories', 'public');
+                $path = $file->store('categories', 'public');
 
                 $images[] = $path;
+
+                //
             }
         }
 
-        Category::create([
-            'name'        => $request->name,
+        //dd($images);
+
+        $category = Category::create([
+            'name' => $request->name,
             'description' => $request->description,
-            'status'      => $request->status,
-
-            // save array
-            'images'      => $images,
+            'status' => $request->status,
+            'images' => $images,
         ]);
+                //dd($category->toArray());
 
-        return redirect()
-            ->route('admin.categories.index')
-            ->with('success', 'Category Added Successfully');
+
+        return redirect()->back()->with('success', 'Category Added');
     }
+
 
     public function update(Request $request, Category $category)
     {
@@ -60,35 +59,24 @@ class CategoryController extends Controller
             'name'        => 'required|string|max:255|unique:categories,name,' . $category->id,
             'description' => 'nullable|string|max:500',
             'status'      => 'required|in:active,inactive',
-
-            // multiple image validation
             'images.*'    => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
         $images = $category->images ?? [];
 
-        // upload new images
         if ($request->hasFile('images')) {
 
             // delete old images
-            if ($category->images) {
-
-                foreach ($category->images as $oldImage) {
-
-                    if (Storage::disk('public')->exists($oldImage)) {
-
-                        Storage::disk('public')->delete($oldImage);
-                    }
+            if (!empty($category->images)) {
+                foreach ($category->images as $old) {
+                    Storage::disk('public')->delete($old);
                 }
             }
 
             $images = [];
 
             foreach ($request->file('images') as $image) {
-
-                $path = $image->store('categories', 'public');
-
-                $images[] = $path;
+                $images[] = $image->store('categories', 'public');
             }
         }
 
@@ -99,8 +87,7 @@ class CategoryController extends Controller
             'images'      => $images,
         ]);
 
-        return redirect()
-            ->route('admin.categories.index')
+        return redirect()->route('admin.categories.index')
             ->with('success', 'Category Updated Successfully');
     }
 

@@ -216,4 +216,30 @@
 
         });
     </script>
+    <script>
+        $(document).on('click', '.deleteBtn', function() {
+
+            let id = $(this).data('id');
+
+            if (!confirm('Are you sure you want to delete this medicine?')) {
+                return;
+            }
+
+            $.ajax({
+                url: '/admin/medicines/' + id,
+                type: 'DELETE',
+                data: {
+                    _token: $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(response) {
+                    alert(response.message);
+                    $('#medicineTable').DataTable().ajax.reload();
+                },
+                error: function(xhr) {
+                    alert(xhr.responseJSON.message ?? 'Delete failed');
+                }
+            });
+
+        });
+    </script>
 @endsection

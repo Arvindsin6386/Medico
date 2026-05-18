@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Category;
 use App\Models\Subcategory;
 use App\Models\Medicine;
+use App\Models\MedicineImages;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -47,59 +48,59 @@ class MedicineController extends Controller
         ));
     }
 
-    public function getmedicine(Request $request)
+    public function getmedicine(Request $request) // ajaxList()
     {
         if ($request->ajax()) {
-            $medicine = Medicine::with('Category')->latest();
+
+            $medicine = Medicine::with('category', 'subcategory')->latest();
+
             return DataTables::of($medicine)
                 ->addIndexColumn()
+
+                // IMAGE
                 ->addColumn('image', function ($row) {
                     if ($row->image) {
-
-                        return '<img src="' . asset('storage/' . $row->image) . '"
-                            width="40"
-                            height="40"
-                            style="border-radius:6px;">';
+                        return '<img src="' . asset("storage/" . $row->image) . '" width="40" height="40" style="border-radius:6px;">';
                     }
-
-                    return 'No Image';
+                    return '<div style="width:40px;height:40px;background:#eee;border-radius:6px;"></div>';
                 })
+
+                // CATEGORY
                 ->addColumn('category', function ($row) {
                     return $row->category->name ?? '-';
                 })
 
-                ->addColumn('suncategory' , function ($row){
+                // SUBCATEGORY
+                ->addColumn('subcategory', function ($row) {
                     return $row->subcategory->name ?? '-';
                 })
 
-                ->addcolumn('status', function ($row) {
-                    if ($row->status == 'active') {
-
-                        return '<span class="badge bg-success">Active</span>';
-                    }
-
-                    return '<span class="badge bg-danger">Inactive</span>';
+                // STATUS
+                ->addColumn('status', function ($row) {
+                    return $row->status == 'active'
+                        ? '<span class="badge bg-success">Active
+                        </span>'
+                        : '<span class="badge bg-danger">Inactive</span>';
                 })
+
+                // ACTION (THIS IS WHERE YOUR IMAGE BUTTON GOES)
                 ->addColumn('action', function ($row) {
 
-                    $editBtn = '
-                    <a href="' . route('admin.medicines.edit', $row->id) . '"
-                        class="btn btn-sm btn-success">
-                        Edit
-                    </a>
-                ';
+                    return '
+                          <a href="' . route('admin.medicines.images.index', $row->id) . '" class="btn btn-sm btn-success">
+                                    Image
+                                     </a>
 
-                    $deleteBtn = '
-                    <button class="btn btn-sm btn-danger deleteBtn"
-                        data-id="' . $row->id . '">
-                        Delete
-                    </button>
-                ';
+                              <a href="' . route('admin.medicines.edit', $row->id) . '" class="btn btn-sm btn-success">
+                                    Edit
+                                     </a>
 
-                    return $editBtn . ' ' . $deleteBtn;
+                                   <button class="btn btn-sm btn-danger deleteBtn" data-id="' . $row->id . '">
+                                     Delete
+                                    </button>
+                                    ';
                 })
                 ->rawColumns(['image', 'status', 'action'])
-
                 ->make(true);
         }
     }
@@ -107,33 +108,26 @@ class MedicineController extends Controller
     // Store Medicine
     public function store(Request $request)
     {
-        // Validation
         $request->validate([
-            'category_id'    => 'required|exists:categories,id',
+            'category_id' => 'required|exists:categories,id',
             'subcategory_id' => 'required|exists:subcategories,id',
-            'name'           => 'required|string|max:255|unique:medicines,name',
-            'selling_price'  => 'nullable|numeric|min:0',
-            'purchase_price' => 'nullable|numeric|min:0',
-            'stock'          => 'nullable|integer|min:0',
-            'expiry_data'    => 'nullable|date',
-            'manufacture_date' => 'nullable|date',
-            'image'          => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'name' => 'required|string|max:255',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
-        // Image Upload
         $imagePath = null;
 
+        // IMAGE UPLOAD
         if ($request->hasFile('image')) {
 
             $imagePath = $request->file('image')
                 ->store('medicines', 'public');
         }
 
-        // Save Medicine
+        // SAVE
         Medicine::create([
 
             'category_id' => $request->category_id,
-
             'subcategory_id' => $request->subcategory_id,
 
             'name' => $request->name,
@@ -154,10 +148,11 @@ class MedicineController extends Controller
 
             'manufacture_date' => $request->manufacture_date,
 
-            'expiry_date' => $request->expiry_data,
+            'expiry_date' => $request->expiry_date,
 
-            'status' => $request->status ?? 'active',
+            'status' => 'active',
 
+            // IMPORTANT
             'image' => $imagePath,
 
             'description' => $request->description,
@@ -165,7 +160,19 @@ class MedicineController extends Controller
 
         return redirect()
             ->route('admin.medicines.index')
-            ->with('success', 'Medicine added successfully!');
+            ->with('success', 'Medicine Added Successfully');
+    }
+    public function edit($id)
+    {
+        $medicine = Medicine::findOrFail($id);
+        $categories = Category::all();
+        $subcategories = Subcategory::all();
+
+        return view('admin.medicines.edit', compact(
+            'medicine',
+            'categories',
+            'subcategories'
+        ));
     }
 
     public function update(Request $request, $id)
