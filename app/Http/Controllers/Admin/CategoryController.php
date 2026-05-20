@@ -5,104 +5,100 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Category;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Storage;
 
 class CategoryController extends Controller
 {
+    // INDEX
     public function index()
     {
-        $categories = Category::withCount('subcategories')->get();
+        $categories = Category::withCount('subcategories')->latest()->get();
 
         return view('admin.categories.index', compact('categories'));
     }
 
+    // STORE
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required',
-            'status' => 'required',
-            'images.*' => 'image|mimes:jpg,jpeg,png,webp|max:2048',
+            'name' => 'required|string|max:255',
+            'status' => 'required|in:active,inactive',
+            'description' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
-        $images = [];
+        $image = null;
 
-        if ($request->hasFile('images')) {
+        if ($request->hasFile('image')) {
 
-            foreach ($request->file('images') as $file) {
-
-                $path = $file->store('categories', 'public');
-
-                $images[] = $path;
-
-                //
-            }
+            $image = $request->file('image')
+                ->store('categories', 'public');
         }
 
-        //dd($images);
-
-        $category = Category::create([
+        Category::create([
             'name' => $request->name,
             'description' => $request->description,
             'status' => $request->status,
-            'images' => $images,
+            'image' => $image,
         ]);
-                //dd($category->toArray());
 
-
-        return redirect()->back()->with('success', 'Category Added');
+        return redirect()
+            ->route('admin.categories.index')
+            ->with('success', 'Category Added Successfully');
     }
 
-
+    // UPDATE
     public function update(Request $request, Category $category)
     {
+        // return $category;
+        // dd($request->all());
+
         $request->validate([
-            'name'        => 'required|string|max:255|unique:categories,name,' . $category->id,
-            'description' => 'nullable|string|max:500',
-            'status'      => 'required|in:active,inactive',
-            'images.*'    => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('categories')->ignore($category->id),
+            ],
+            'status' => 'required|in:active,inactive',
+            'description' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
-        $images = $category->images ?? [];
 
-        if ($request->hasFile('images')) {
 
-            // delete old images
-            if (!empty($category->images)) {
-                foreach ($category->images as $old) {
-                    Storage::disk('public')->delete($old);
-                }
+        $image = $category->image;
+
+        if ($request->hasFile('image')) {
+
+            if ($category->image && Storage::disk('public')->exists($category->image)) {
+                Storage::disk('public')->delete($category->image);
             }
 
-            $images = [];
-
-            foreach ($request->file('images') as $image) {
-                $images[] = $image->store('categories', 'public');
-            }
+            $image = $request->file('image')->store('categories', 'public');
         }
 
         $category->update([
-            'name'        => $request->name,
+            'name' => $request->name,
             'description' => $request->description,
-            'status'      => $request->status,
-            'images'      => $images,
+            'status' => $request->status,
+            'image' => $image,
         ]);
 
         return redirect()->route('admin.categories.index')
             ->with('success', 'Category Updated Successfully');
     }
 
+    // DELETE
     public function destroy(Category $category)
     {
-        // delete images
-        if ($category->images) {
+        if (
+            $category->image &&
+            Storage::disk('public')->exists($category->image)
+        ) {
 
-            foreach ($category->images as $image) {
-
-                if (Storage::disk('public')->exists($image)) {
-
-                    Storage::disk('public')->delete($image);
-                }
-            }
+            Storage::disk('public')->delete($category->image);
         }
 
         $category->delete();

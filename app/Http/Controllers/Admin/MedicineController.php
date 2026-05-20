@@ -88,7 +88,7 @@ class MedicineController extends Controller
 
                     return '
                           <a href="' . route('admin.medicines.images.index', $row->id) . '" class="btn btn-sm btn-success">
-                                    Image
+                                    View
                                      </a>
 
                               <a href="' . route('admin.medicines.edit', $row->id) . '" class="btn btn-sm btn-success">
@@ -117,49 +117,29 @@ class MedicineController extends Controller
 
         $imagePath = null;
 
-        // IMAGE UPLOAD
         if ($request->hasFile('image')) {
-
-            $imagePath = $request->file('image')
-                ->store('medicines', 'public');
+            $imagePath = $request->file('image')->store('medicines', 'public');
         }
 
-        // SAVE
         Medicine::create([
-
             'category_id' => $request->category_id,
             'subcategory_id' => $request->subcategory_id,
-
             'name' => $request->name,
-
             'brand_name' => $request->brand_name,
-
             'medicine_type' => $request->medicine_type,
-
             'unit' => $request->unit,
-
             'purchase_price' => $request->purchase_price ?? 0,
-
             'selling_price' => $request->selling_price ?? 0,
-
             'stock' => $request->stock ?? 0,
-
             'batch_number' => $request->batch_number,
-
             'manufacture_date' => $request->manufacture_date,
-
             'expiry_date' => $request->expiry_date,
-
             'status' => 'active',
-
-            // IMPORTANT
             'image' => $imagePath,
-
             'description' => $request->description,
         ]);
 
-        return redirect()
-            ->route('admin.medicines.index')
+        return redirect()->route('admin.medicines.index')
             ->with('success', 'Medicine Added Successfully');
     }
     public function edit($id)
@@ -175,11 +155,8 @@ class MedicineController extends Controller
         ));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, Medicine $medicine)
     {
-        $medicine = Medicine::findOrFail($id);
-
-        // Validation
         $request->validate([
             'name'           => 'required|string|max:255',
             'category_id'    => 'required|exists:categories,id',
@@ -190,42 +167,29 @@ class MedicineController extends Controller
             'image'          => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
-        // Data
         $data = [
-
             'category_id'      => $request->category_id,
-
             'subcategory_id'   => $request->subcategory_id,
-
             'name'             => $request->name,
-
             'purchase_price'   => $request->purchase_price,
-
             'selling_price'    => $request->selling_price,
-
             'stock'            => $request->stock,
-
             'batch_number'     => $request->batch_number,
-
             'manufacture_date' => $request->manufacture_date,
-
             'expiry_date'      => $request->expiry_date,
-
             'description'      => $request->description,
         ];
 
-        // Image Upload
+        // IMAGE
         if ($request->hasFile('image')) {
 
             if ($medicine->image && Storage::disk('public')->exists($medicine->image)) {
                 Storage::disk('public')->delete($medicine->image);
             }
 
-            $data['image'] = $request->file('image')
-                ->store('medicines', 'public');
+            $data['image'] = $request->file('image')->store('medicines', 'public');
         }
 
-        // Update
         $medicine->update($data);
 
         return redirect()
