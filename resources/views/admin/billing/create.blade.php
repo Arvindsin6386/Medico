@@ -293,8 +293,8 @@
 
                             <label>Quantity</label>
 
-                            <input type="number" name="quantity[]" placeholder="0" min="1">
-
+                            <input type="number" name="quantity[]" class="form-control" min="1" value="1"
+                            >
                         </div>
 
                         {{-- Remove Button --}}

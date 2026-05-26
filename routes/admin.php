@@ -43,6 +43,9 @@ Route::middleware('auth:admin')->group(function () {
     // Medicines
     Route::get('medicines-data', [MedicineController::class, 'getmedicine'])
         ->name('medicines.data');
+
+    Route::get('/medicine/view/{id}', [MedicineController::class, 'view'])
+        ->name('medicine.view');
     Route::resource('medicines', MedicineController::class);
 
     // Reports
@@ -60,5 +63,6 @@ Route::middleware('auth:admin')->group(function () {
         Route::get('/',       [BillingController::class, 'index'])->name('index');
         Route::post('/store', [BillingController::class, 'store'])->name('store');
     });
-
 });
+
+ 

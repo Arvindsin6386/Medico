@@ -197,31 +197,14 @@
 
                                     {{-- IMAGE --}}
                                     <td class="py-3">
-
                                         @if ($category->image)
-                                            <img src="{{ asset('storage/' . $category->image) }}" alt="Image"
-                                                style="width:40px;
-                                                       height:40px;
-                                                       object-fit:cover;
-                                                       border-radius:8px;">
+                                            <img src="{{ str_starts_with($category->image, 'http') ? $category->image : asset('storage/' . $category->image) }}"
+                                                width="40" height="40" style="object-fit:cover;border-radius:8px;">
                                         @else
-                                            <div
-                                                style="width:40px;
-                                                        height:40px;
-                                                        background:#e1f5ee;
-                                                        border-radius:8px;
-                                                        display:flex;
-                                                        align-items:center;
-                                                        justify-content:center;">
-
-                                                <i class="bi bi-image text-muted"></i>
-
-                                            </div>
+                                            <div style="width:40px;height:40px;background:#e1f5ee;border-radius:8px;"></div>
                                         @endif
 
-                                    </td>
-
-                                    {{-- NAME --}}
+                                        {{-- NAME --}}
                                     <td class="py-3">
 
                                         <p class="mb-0 fw-semibold" style="color:#0d2b24;">
@@ -561,10 +544,8 @@
                                     Image
 
                                 </label>
-
                                 <input type="file" name="image" class="form-control"
                                     accept="image/jpg,image/jpeg,image/png,image/webp">
-
                             </div>
 
                             {{-- DESCRIPTION --}}

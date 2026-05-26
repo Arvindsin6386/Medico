@@ -78,7 +78,7 @@
                 <select id="filterCategory" class="form-control form-control-sm">
                     <option value="">All Categories</option>
                     @foreach ($categories as $cat)
-                        <option value="{{ strtolower($cat->name) }}">{{ $cat->name }}</option>
+                        <option value="{{ strtolower($cat->id) }}">{{ $cat->name }}</option>
                     @endforeach
                 </select>
             </div>
@@ -132,90 +132,121 @@
          ============================================ --}}
     <script>
         $(document).ready(function() {
+
             // DATABASE
-            let table = $('#medicineTable').DataTable({
-                processing: true,
-                serverSide: true,
-                ajax: {
-                    url: "{{ route('admin.medicines.data') }}",
-                    data: function(data) {
-                        data.category = $('#filterCategory').val();
+            // list function
+            function listFunction() {
+                if ($.fn.DataTable.isDataTable('#medicineTable')) {
+                    $('#medicineTable').DataTable().destroy();
+                }
+                let table = $('#medicineTable').DataTable({
+                    processing: true,
+                    serverSide: true,
+                    ajax: {
+                        url: "{{ route('admin.medicines.data') }}",
+                        data: function(data) {
 
-                        data.stock = $('#filterStock').val();
+                            data.category = $('#filterCategory').val();
+                            data.stock = $('#filterStock').val();
+                            data.search = $('#searchInput').val();
 
-                        data.search = $('#searchInput').val();
-
-                    }
-                },
-                columns: [
-
-                    {
-                        data: 'id',
-                        name: 'id',
-                        searchable: false,
-                        orderable: false
+                        }
                     },
 
-                    {
-                        data: 'image',
-                        name: 'image',
-                        searchable: false,
-                        orderable: false
-                    },
+                    columns: [
 
-                    {
-                        data: 'name', // display the value
-                        name: 'name' // display the name
-                    },
+                        {
+                            data: 'id',
+                            name: 'id',
+                            searchable: false,
+                            orderable: false
+                        },
 
-                    {
-                        data: 'category',
-                        name: 'category'
-                    },
+                        {
+                            data: 'image',
+                            name: 'image',
+                            searchable: false,
+                            orderable: false
+                        },
 
-                    {
-                        data: 'medicine_type',
-                        name: 'medicine_type'
-                    },
+                        {
+                            data: 'name',
+                            name: 'name'
+                        },
 
-                    {
-                        data: 'purchase_price',
-                        name: 'purchase_price'
-                    },
+                        {
+                            data: 'category',
+                            name: 'category'
+                        },
 
-                    {
-                        data: 'selling_price',
-                        name: 'selling_price'
-                    },
+                        {
+                            data: 'medicine_type',
+                            name: 'medicine_type'
+                        },
 
-                    {
-                        data: 'stock',
-                        name: 'stock'
-                    },
+                        {
+                            data: 'purchase_price',
+                            name: 'purchase_price'
+                        },
 
-                    {
-                        data: 'expiry_date',
-                        name: 'expiry_date'
-                    },
+                        {
+                            data: 'selling_price',
+                            name: 'selling_price'
+                        },
 
-                    {
-                        data: 'status',
-                        name: 'status'
-                    },
+                        {
+                            data: 'stock',
+                            name: 'stock'
+                        },
 
-                    {
-                        data: 'action',
-                        name: 'action',
-                        orderable: false,
-                        searchable: false
-                    }
+                        {
+                            data: 'expiry_date',
+                            name: 'expiry_date'
+                        },
 
-                ]
+                        {
+                            data: 'status',
+                            name: 'status'
+                        },
+
+                        {
+                            data: 'action',
+                            name: 'action',
+                            orderable: false,
+                            searchable: false
+                        }
+
+                    ]
+
+                });
+
+            }
+
+            // On page load
+            listFunction();
+
+            // On category change
+            $('#filterCategory').change(function() {
+                listFunction();
+            });
+
+            $('#filterStock').change(function() {
+                listFunction();
 
             });
 
+            $('#searchInput').change(function() {
+                listFunction();
+
+            });
+
+
+
         });
     </script>
+
+
+
     <script>
         $(document).on('click', '.deleteBtn', function() {
 

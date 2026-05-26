@@ -52,7 +52,31 @@ class MedicineController extends Controller
     {
         if ($request->ajax()) {
 
-            $medicine = Medicine::with('category', 'subcategory')->latest();
+            $query = Medicine::with('category', 'subcategory');
+
+            if (!empty($request->category)) {
+                $query->where('category_id', $request->category);
+            }
+            if(!empty($request->stock)){
+               if($request->stock == 'low'){
+                $query->where('stock', '<=' , '5');
+               }
+
+               if($request->stock == 'out'){
+                $query->where('stock' , '=' , 0);
+               }
+
+               if($request->stock == 'avilable'){
+                $query->where('stcok' , '>' , 0);
+               }
+
+            }
+
+            if(!empty($request->search)){
+                $query->where('name');
+            }
+
+            $medicine = $query->latest()->get();
 
             return DataTables::of($medicine)
                 ->addIndexColumn()
@@ -87,18 +111,27 @@ class MedicineController extends Controller
                 ->addColumn('action', function ($row) {
 
                     return '
-                          <a href="' . route('admin.medicines.images.index', $row->id) . '" class="btn btn-sm btn-success">
-                                    View
-                                     </a>
+        <a href="' . route('admin.medicine.view', $row->id) . '" 
+           class="btn btn-sm btn-success">
 
-                              <a href="' . route('admin.medicines.edit', $row->id) . '" class="btn btn-sm btn-success">
-                                    Edit
-                                     </a>
+           View
 
-                                   <button class="btn btn-sm btn-danger deleteBtn" data-id="' . $row->id . '">
-                                     Delete
-                                    </button>
-                                    ';
+        </a>
+
+        <a href="' . route('admin.medicines.edit', $row->id) . '" 
+           class="btn btn-sm btn-primary">
+
+           Edit
+
+        </a>
+
+        <button class="btn btn-sm btn-danger deleteBtn" 
+                data-id="' . $row->id . '">
+
+            Delete
+
+        </button>
+    ';
                 })
                 ->rawColumns(['image', 'status', 'action'])
                 ->make(true);
@@ -212,5 +245,12 @@ class MedicineController extends Controller
 
         $medicine->delete();
         return response()->json(['success' => true, 'message' => 'Medicine deleted successfully.']);
+    }
+
+    public function view($id)
+    {
+        $medicine = Medicine::with('images')->findOrFail($id);
+        //  $medicine = Medicine::all();
+        return view('admin.medicines.medicine-view', compact('medicine'));
     }
 }

@@ -3,9 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+
 
 class Subcategory extends Model // Subategory // sub_categories
 {
+        use HasFactory;
+
     protected $fillable = ['category_id', 'name', 'description', 'image', 'status'];
 
     protected $dates = [
