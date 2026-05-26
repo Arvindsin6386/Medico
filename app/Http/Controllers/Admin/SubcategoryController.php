@@ -31,7 +31,7 @@ class SubcategoryController extends Controller
         ]);
         $imagepath = null;
         if ($request->hasFile('image')) {
-            $imagepath = $request->file('image')->store('suncategories', 'public');
+            $imagepath = $request->file('image')->store('subcategories', 'public');
         }
 
         Subcategory::create([
@@ -108,7 +108,7 @@ class SubcategoryController extends Controller
         ]);
 
 
-        
+
         if ($updated) {
 
             return redirect()->back()

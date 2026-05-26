@@ -103,6 +103,7 @@
                         </thead>
                         <tbody id="subcategoryTableBody">
                             @forelse($subcategories as $index => $subcategory)
+                               {{-- // {{ dd($subcategory->image) }} --}}
                                 <tr class="subcategory-row" data-name="{{ strtolower($subcategory->name) }}"
                                     data-category="{{ strtolower($subcategory->category->name ?? '') }}"
                                     data-status="{{ $subcategory->status }}">
@@ -111,14 +112,14 @@
 
                                     <td class="py-3">
                                         @if ($subcategory->image)
-                                            <img src="{{ asset('storage/' . $subcategory->image) }}"
+                                            <img src="{{ Str::startsWith($subcategory->image, 'http') ? $subcategory->image : asset('storage/' . $subcategory->image) }}"
                                                 alt="{{ $subcategory->name }}"
                                                 style="width:40px; height:40px; object-fit:cover; border-radius:8px;">
                                         @else
                                             <div
                                                 style="width:40px; height:40px; background:#e1f5ee;
-                                                    border-radius:8px; display:flex;
-                                                    align-items:center; justify-content:center;">
+                                                border-radius:8px; display:flex;
+                                                  align-items:center; justify-content:center;">
                                                 <i class="bi bi-image text-muted" style="font-size:16px;"></i>
                                             </div>
                                         @endif
@@ -279,21 +280,24 @@
                                                                 style="font-size:13px; font-weight:500;">
                                                                 Image
                                                             </label>
+
                                                             @if ($subcategory->image)
                                                                 <div class="mb-2">
-                                                                    <img id="editPreview{{ $subcategory->id }}"
-                                                                        src="{{ asset('storage/' . $subcategory->image) }}"
-                                                                        style="height:60px; border-radius:8px;">
+                                                                    <img src="{{ Str::startsWith($subcategory->image, 'http') ? $subcategory->image : asset('storage/' . $subcategory->image) }}"
+                                                                        alt="{{ $subcategory->name }}"
+                                                                        style="width:40px; height:40px; object-fit:cover; border-radius:8px;">
                                                                 </div>
                                                             @else
                                                                 <img id="editPreview{{ $subcategory->id }}"
                                                                     src="#" alt="Preview"
                                                                     style="display:none; margin-bottom:8px; height:60px; border-radius:8px;">
                                                             @endif
+
                                                             <input type="file" name="image"
                                                                 class="form-control image-input"
                                                                 accept="image/jpg,image/jpeg,image/png,image/webp"
                                                                 data-preview="editPreview{{ $subcategory->id }}">
+
                                                             @if ($errors->has('image') && old('_edit_id') == $subcategory->id)
                                                                 <span class="text-danger" style="font-size:12px;">
                                                                     {{ $errors->first('image') }}
@@ -573,62 +577,59 @@
         });
     </script>
 
-{{-- REOPEN EDIT MODAL AFTER VALIDATION ERROR --}}
-<script>
+    {{-- REOPEN EDIT MODAL AFTER VALIDATION ERROR --}}
+    <script>
+        window.onload = function() {
 
-window.onload = function () {
+            @if ($errors->any())
 
-    @if ($errors->any())
+                // Get old edit modal id
+                var editId = "{{ old('_edit_id') }}";
 
-        // Get old edit modal id
-        var editId = "{{ old('_edit_id') }}";
+                // Check edit modal exists
+                if (editId) {
 
-        // Check edit modal exists
-        if (editId) {
+                    // Create modal id
+                    var modalId = 'editSubcategory' + editId;
 
-            // Create modal id
-            var modalId = 'editSubcategory' + editId;
+                    // Find modal
+                    var modalElement =
+                        document.getElementById(modalId);
 
-            // Find modal
-            var modalElement =
-                document.getElementById(modalId);
+                    // Open modal
+                    if (modalElement) {
 
-            // Open modal
-            if (modalElement) {
+                        setTimeout(function() {
 
-                setTimeout(function () {
+                            var modal =
+                                new bootstrap.Modal(modalElement);
 
-                    var modal =
-                        new bootstrap.Modal(modalElement);
+                            modal.show();
 
-                    modal.show();
+                        }, 300);
+                    }
 
-                }, 300);
-            }
+                } else {
 
-        } else {
+                    // OPEN ADD MODAL IF ADD FORM HAS ERROR
+                    var addModal =
+                        document.getElementById('addSubcategoryModal');
 
-            // OPEN ADD MODAL IF ADD FORM HAS ERROR
-            var addModal =
-                document.getElementById('addSubcategoryModal');
+                    if (addModal) {
 
-            if (addModal) {
+                        setTimeout(function() {
 
-                setTimeout(function () {
+                            var modal =
+                                new bootstrap.Modal(addModal);
 
-                    var modal =
-                        new bootstrap.Modal(addModal);
+                            modal.show();
 
-                    modal.show();
+                        }, 300);
+                    }
+                }
+            @endif
 
-                }, 300);
-            }
-        }
-
-    @endif
-
-};
-
-</script>
+        };
+    </script>
 
 @endsection
