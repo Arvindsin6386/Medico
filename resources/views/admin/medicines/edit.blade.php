@@ -128,33 +128,31 @@
 
                 <div class="row">
 
-                    @forelse($medicine->images as $img)
+                    @forelse ($medicine->images as $img)
                         <div class="col-md-3 mb-3 text-center">
 
-                            @php
-                                $imgSrc = Str::startsWith($img->image_path, ['http', 'https'])
-                                    ? $img->image_path
-                                    : asset('storage/' . $img->image_path);
-                            @endphp
-
-                            <a href="{{ $imgSrc }}" target="_blank">
-                                <img src="{{ $imgSrc }}" class="img-fluid rounded shadow"
-                                    style="height:150px; width:100%; object-fit:cover;">
-                            </a>
+                            <img src="{{ Str::startsWith($img->image_path, 'http') ? $img->image_path : asset('storage/' . $img->image_path) }}"
+                                alt="Medicine Image" class="img-fluid rounded shadow"
+                                style="height:150px; width:100%; object-fit:cover;">
 
                             <form action="{{ route('admin.medicines.images.destroy', [$medicine->id, $img->id]) }}"
                                 method="POST" class="mt-2">
+
                                 @csrf
                                 @method('DELETE')
 
                                 <button class="btn btn-danger btn-sm w-100" onclick="return confirm('Delete this image?')">
+
                                     🗑 Delete
+
                                 </button>
+
                             </form>
 
                         </div>
 
                     @empty
+
                         <div class="col-12 text-muted">
                             No images uploaded yet.
                         </div>

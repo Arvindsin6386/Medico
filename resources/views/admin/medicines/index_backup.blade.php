@@ -44,27 +44,20 @@
 
                             @forelse($medicines as $medicine)
                                 <tr>
-
-                                    <td>{{ $medicine->id }}</td>
-
-                                    {{-- IMAGE THUMBNAIL
-                                         Bug fix: was using $medicine->image (wrong field).
-                                         Correct: use images() relationship → first() → image_path
-                                         data-bs-toggle and data-bs-target open the image modal directly.
-                                         No JS needed — Bootstrap handles it via data attributes.
-                                    --}}
                                     <td>
-                                        @if ($medicine->images && $medicine->images->count() > 0)
-                                            <img src="{{ asset('storage/' . $medicine->images->first()->image_path) }}"
-                                                width="60" height="60"
-                                                class="img-thumbnail"
-                                                style="cursor:pointer; object-fit:cover;"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#imageModal{{ $medicine->id }}"
-                                                title="{{ $medicine->images->count() }} image(s) — click to manage">
+                                        {{ dd($medicine->masterImage) }}
+
+                                        @if ($medicine->masterImage)
+                                            <img src="{{ asset('storage/' . $medicine->masterImage->image_path) }}"
+                                                alt="Medicine Image" width="60" height="60" class="img-thumbnail"
+                                                style="object-fit:cover; cursor:pointer;" data-bs-toggle="modal"
+                                                data-bs-target="#imageModal{{ $medicine->id }}">
                                         @else
-                                            <span class="text-muted" style="font-size:12px;">No Image</span>
+                                            <span class="text-muted" style="font-size:12px;">
+                                                No Image
+                                            </span>
                                         @endif
+
                                     </td>
 
                                     <td>{{ $medicine->name }}</td>
@@ -80,8 +73,7 @@
                                         {{-- MANAGE IMAGES BUTTON --}}
                                         <button class="btn btn-sm px-2 py-1"
                                             style="background:#fff3cd; color:#856404; border-radius:8px;"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#imageModal{{ $medicine->id }}"
+                                            data-bs-toggle="modal" data-bs-target="#imageModal{{ $medicine->id }}"
                                             title="Manage Images">
                                             <i class="bi bi-image"></i>
                                         </button>
@@ -93,8 +85,8 @@
                                         </a>
 
                                         {{-- DELETE --}}
-                                        <form action="{{ route('medicines.destroy', $medicine->id) }}"
-                                            method="POST" class="d-inline">
+                                        <form action="{{ route('medicines.destroy', $medicine->id) }}" method="POST"
+                                            class="d-inline">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-danger btn-sm"
@@ -124,8 +116,7 @@
                                                         ({{ $medicine->images->count() }} uploaded)
                                                     </small>
                                                 </h5>
-                                                <button type="button" class="btn-close"
-                                                    data-bs-dismiss="modal"></button>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                             </div>
 
                                             <div class="modal-body">
@@ -141,12 +132,11 @@
                                                     <div class="mb-3">
                                                         <label class="form-label fw-semibold">
                                                             Upload Images
-                                                            <small class="text-muted fw-normal">(jpg, jpeg, png, webp — multiple allowed)</small>
+                                                            <small class="text-muted fw-normal">(jpg, jpeg, png, webp —
+                                                                multiple allowed)</small>
                                                         </label>
-                                                        <input type="file" name="images[]"
-                                                            class="form-control" multiple
-                                                            accept="image/jpg,image/jpeg,image/png,image/webp"
-                                                            required>
+                                                        <input type="file" name="images[]" class="form-control" multiple
+                                                            accept="image/jpg,image/jpeg,image/png,image/webp" required>
                                                     </div>
                                                     <button class="btn btn-primary btn-sm">
                                                         <i class="bi bi-upload"></i> Upload Images
@@ -175,7 +165,8 @@
                                                                  Controller: MedicineImagesController@destroy($img->id)
                                                                  Deletes only this one image from storage + DB
                                                             --}}
-                                                            <form action="{{ route('medicines.images.destroy', $img->id) }}"
+                                                            <form
+                                                                action="{{ route('medicines.images.destroy', $img->id) }}"
                                                                 method="POST" class="mt-2">
                                                                 @csrf
                                                                 @method('DELETE')

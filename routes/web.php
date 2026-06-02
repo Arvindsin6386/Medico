@@ -18,23 +18,25 @@ Route::prefix('admin')
     });
 
 
-Route::get('test-factory', function () {
-    $images = [
-        'https://images.unsplash.com/photo-1587854692152-cbe660dbde88',
-        'https://images.unsplash.com/photo-1573883431205-98b5f10aaedb',
-        'https://images.unsplash.com/photo-1603398938378-e54eab446dde',
-        'https://images.unsplash.com/photo-1584017911766-d451b3d0e843',
-        'https://images.unsplash.com/photo-1631549916768-4119b2e5f926',
-    ];
-    $order = rand(1, 5);
-    $image = $images[$order];
-    
+Route::get('/test-array', function () {
 
-    return $image;
-    // $url = fake()->imageUrl();
-    // $category = Category::factory()->create();
+    $array = [1,2,3,4,5,6,7,8,9,10];
 
+    shuffle($array);
+   // dd($array);
 
+    $randomItems = array_slice($array, 0, rand(2,5));
 
-    return $category;
+    //dd($randomItems);
+
 });
+
+// Route::get('/test-array', function () {
+
+//     $array = [7,2,9,1,4,6];
+
+//     $randomItems = array_slice($array, 0, 3);
+
+//     dd($randomItems);
+
+// });

@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Medicine extends Model
 {
     use SoftDeletes;
-        use HasFactory;
+    use HasFactory;
 
     protected $fillable = [
 
@@ -80,5 +80,11 @@ class Medicine extends Model
     public function billItems()
     {
         return $this->hasMany(BillItem::class);
+    }
+
+    public function masterImage()
+    {
+        return $this->hasOne(MedicineImages::class)
+            ->where('is_master', 1);
     }
 }
