@@ -4,33 +4,33 @@ namespace Database\Factories;
 
 use App\Models\SubCategory;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Facades\Storage;
-
 
 class MedicineFactory extends Factory
 {
     public function definition(): array
     {
-       
+        $subcategory = SubCategory::inRandomOrder()->first();
 
-       return [
+        return [
 
-    'subcategory_id' => SubCategory::inRandomOrder()->value('id'),
+            'category_id' => $subcategory->category_id,
 
-    'name' => fake()->word(),
+            'subcategory_id' => $subcategory->id,
 
-    'purchase_price' => rand(100,500),
+            'name' => fake()->word(),
 
-    'selling_price' => rand(600,2000),
+            'purchase_price' => rand(100, 500),
 
-    'stock' => rand(10,100),
+            'selling_price' => rand(600, 2000),
 
-    'expiry_date' => fake()->dateTimeBetween('+1 year', '+5 years'),
+            'stock' => rand(10, 100),
 
-    'description' => fake()->sentence(),
+            'expiry_date' => fake()->dateTimeBetween('+1 year', '+5 years'),
 
-    'status' => 1,
+            'description' => fake()->sentence(),
 
-];
+            'status' => 1,
+
+        ];
     }
 }

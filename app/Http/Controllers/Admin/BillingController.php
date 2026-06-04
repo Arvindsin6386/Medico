@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Haruncpi\LaravelIdGenerator\IdGenerator;
+
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Bill;
 use App\Models\BillItem;
 use App\Models\Sale;
 use App\Models\Medicine;
+use App\Models\Customer;
 
 class BillingController extends Controller
 {
@@ -19,64 +22,142 @@ class BillingController extends Controller
 
     public function store(Request $request)
     {
-        // dd($request->all());
         $total_amount = 0;
 
-        $bill = Bill::create([
-            'bill_number' => 'BILL-' . time(),
-            'customer_name' => $request->customer_name,
-            'customer_phone' => $request->customer_phone,
-            'subtotal' => 0,
-            'tax' => 0,
-            'total_amount' => 0,
-        ]);
+        /*
+    |--------------------------------------------------------------------------
+    | Find Customer By Phone
+    |--------------------------------------------------------------------------
+    */
+        $customer = Customer::where(
+            'phone',
+            $request->customer_phone
+        )->first();
 
-        foreach ($request->medicine_id as $key => $medicineId) {
-            // find medicine
-            $medicine = Medicine::findOrFail($medicineId);
+        /*
+    |--------------------------------------------------------------------------
+    | Create Customer If Not Exists
+    |--------------------------------------------------------------------------
+    */
+        if (!$customer) {
 
-            // quantity
-            $qty = $request->quantity[$key];
+            $customerCode = IdGenerator::generate([
+                'table'  => 'customers',
+                'field'  => 'customer_id',
+                'length' => 8,
+                'prefix' => 'CUS'
+            ]);
 
-            // correct price field
-            $price = $medicine->selling_price;
-
-            // subtotal
-            $subtotal = $price * $qty;
-
-            // add into final total
-            $total_amount += $subtotal;
-
-            // save bill item
-            BillItem::create([
-                'bill_id' => $bill->id,
-                'medicine_id' => $medicine->id,
-                'medicine_name' => $medicine->name,
-                'quantity' => $qty,
-                'unit_price' => $price,
-                'subtotal' => $subtotal,
+            $customer = Customer::create([
+                'customer_id' => $customerCode,
+                'name'        => $request->customer_name,
+                'phone'       => $request->customer_phone,
             ]);
         }
 
-        // calculate tax percentage
-        $taxPercentage = 5;
-        
-
-        // calculate tax
-        $tax = $total_amount * ($taxPercentage / 100);
-
-        // final total
-        $finalTotal = $total_amount + $tax;
-
-        // update bill
-        $bill->update([
-            'subtotal' => $total_amount,
-            'tax' => $tax,
-            'tax_percentage' => $taxPercentage,
-            'total_amount' => $finalTotal,
+        /*
+    |--------------------------------------------------------------------------
+    | Generate Bill Number
+    |--------------------------------------------------------------------------
+    */
+        $billNumber = IdGenerator::generate([
+            'table'  => 'bills',
+            'field'  => 'bill_number',
+            'length' => 10,
+            'prefix' => 'BILL'
         ]);
 
+        /*
+    |--------------------------------------------------------------------------
+    | Create Bill
+    |--------------------------------------------------------------------------
+    */
+        $bill = Bill::create([
+            'bill_number'     => $billNumber,
 
-        return back()->with('success', 'Bill Created Successfully');
+            // Customer Relation
+            'customer_id'     => $customer->id,
+            'customer_name'   => $customer->name,
+            'customer_phone'  => $customer->phone,
+            'subtotal'        => 0,
+            'tax'             => 0,
+            'tax_percentage'  => 0,
+            'total_amount'    => 0,
+        ]);
+
+        /*
+    |--------------------------------------------------------------------------
+    | Save Medicines
+    |--------------------------------------------------------------------------
+    */
+        foreach ($request->medicine_id as $key => $medicineId) {
+
+            $medicine = Medicine::findOrFail($medicineId);
+
+            $qty = $request->quantity[$key];
+
+            $price = $medicine->selling_price;
+
+            $subtotal = $price * $qty;
+
+            $total_amount += $subtotal;
+
+            BillItem::create([
+                'bill_id'        => $bill->id,
+                'medicine_id'    => $medicine->id,
+                'medicine_name'  => $medicine->name,
+                'quantity'       => $qty,
+                'unit_price'     => $price,
+                'subtotal'       => $subtotal,
+            ]);
+
+            // Reduce Stock
+            $medicine->decrement('stock', $qty);
+        }
+
+        /*
+    |--------------------------------------------------------------------------
+    | Tax Calculation
+    |--------------------------------------------------------------------------
+    */
+        $taxPercentage = 5;
+
+        $tax = ($total_amount * $taxPercentage) / 100;
+
+        $finalTotal = $total_amount + $tax;
+
+        /*
+    |--------------------------------------------------------------------------
+    | Update Bill Totals
+    |--------------------------------------------------------------------------
+    */
+        $bill->update([
+            'subtotal'       => $total_amount,
+            'tax'            => $tax,
+            'tax_percentage' => $taxPercentage,
+            'total_amount'   => $finalTotal,
+        ]);
+
+        return redirect()
+            ->route('admin.dashboard')
+            ->with('success', 'Bill Created Successfully');
+    }
+
+
+    public function customerSearch(Request $request)
+    {
+        $search = $request->search;
+        $customers = Customer::where('phone', 'LIKE', '%' . $search . '%')->get();
+
+        return response()->json($customers);
+    }
+    public function medicineSearch(Request $request)
+    {
+        $medicines = Medicine::with(['category', 'subcategory'])
+            ->where('name', 'LIKE', '%' . $request->search . '%')
+            ->limit(10)
+            ->get();
+
+        return response()->json($medicines);
     }
 }
