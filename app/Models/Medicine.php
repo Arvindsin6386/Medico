@@ -39,6 +39,8 @@ class Medicine extends Model
         'description',
     ];
 
+    
+
 
     public function category()
     {
@@ -86,5 +88,14 @@ class Medicine extends Model
     {
         return $this->hasOne(MedicineImages::class)
             ->where('is_master', 1);
+    }
+
+    // 
+    public function getImageUrlAttribute()
+    {
+        if (!$this->image) {
+            return null;
+        }
+        return asset('storage/medicines/' . $this->image);
     }
 }

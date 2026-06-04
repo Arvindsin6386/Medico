@@ -62,6 +62,10 @@ Route::middleware('auth:admin')->group(function () {
     Route::prefix('billing')->name('billing.')->group(function () {
         Route::get('/',       [BillingController::class, 'index'])->name('index');
         Route::post('/store', [BillingController::class, 'store'])->name('store');
+        Route::get('/customer/search', [BillingController::class, 'customerSearch'])
+    ->name('customer.search');
+    Route::get('/medicine/search', [BillingController::class, 'medicineSearch'])
+    ->name('medicine.search');
     });
 });
 
