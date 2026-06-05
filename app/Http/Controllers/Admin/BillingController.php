@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\MedicineResource;
 use Illuminate\Http\Request;
 use App\Models\Bill;
 use App\Models\BillItem;
@@ -153,11 +154,11 @@ class BillingController extends Controller
     }
     public function medicineSearch(Request $request)
     {
-        $medicines = Medicine::with(['category', 'subcategory'])
+        $medicines = Medicine::with(['category:id,name', 'subcategory:id,category_id,name','masterImage'])
             ->where('name', 'LIKE', '%' . $request->search . '%')
             ->limit(10)
             ->get();
 
-        return response()->json($medicines);
+        return response()->json(MedicineResource::collection($medicines));
     }
 }

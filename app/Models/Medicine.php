@@ -96,6 +96,6 @@ class Medicine extends Model
         if (!$this->image) {
             return null;
         }
-        return asset('storage/medicines/' . $this->image);
+        return asset('storage/' . $this->image);
     }
 }

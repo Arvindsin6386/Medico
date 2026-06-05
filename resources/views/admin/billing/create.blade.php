@@ -504,7 +504,7 @@
             z-index: 9999;
             background: #fff;
             /* border: 1px solid var(--rule);
-            border-top: 2px solid var(--accent); */
+                                                        border-top: 2px solid var(--accent); */
             border-radius: 0 0 4px 4px;
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.10);
             width: 100%;
@@ -783,29 +783,36 @@
                 },
 
                 success: function(response) {
-
                     let html = '';
-
                     response.forEach(function(medicine) {
-
+                        let imageHtml = '';
+                        if (medicine.master_image) {
+                            // console.log('Image Found');
+                            imageHtml = `
+                        <img src="/storage/${medicine.master_image.image_path}"
+                             width="50"
+                             height="50"
+                             style="object-fit:cover;border-radius:3px;">
+                    `;
+                        } else {
+                    // console.log('No Image');
+                            imageHtml = 'No Image';
+                        }
                         html += `
                     <div class="medicine-item"
-                         data-id="${medicine.id}"
-                         data-name="${medicine.name}"
-                      data-category="${medicine.category.name}"
-                       data-subcategory="${medicine.subcategory.name}">
+                        data-id="${medicine.id}"
+                        data-name="${medicine.name}"
+                        data-category="${medicine.category.name}"
+                        data-subcategory="${medicine.subcategory.name}">
 
-                        <div style="display:flex;align-items:center;gap:10px;padding:8px;">
+                        <div style="display:flex;gap:10px;align-items:center;">
 
-                            <img src="/storage/${medicine.image}"
-                                 width="50"
-                                 height="50"
-                                 style="object-fit:cover;border-radius:3px;">
+                            ${imageHtml}
 
                             <div>
                                 <strong>${medicine.name}</strong><br>
-                              Category: ${medicine.category.name}<br>
-                              Subcategory: ${medicine.subcategory.name}
+                                Category: ${medicine.category.name}<br>
+                                Subcategory: ${medicine.subcategory.name}
                             </div>
 
                         </div>
@@ -816,8 +823,13 @@
                     parent.find('.medicine-results')
                         .html(html)
                         .show();
+                },
+
+                error: function(xhr) {
+                    console.log(xhr.responseText);
                 }
             });
+
         });
         /*
         |--------------------------------------------------------------------------
